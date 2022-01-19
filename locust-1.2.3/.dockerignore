@@ -1,0 +1,8 @@
+locust.egg-info/**
+locustio.egg-info/**
+dist/
+build/
+.coverage
+.tox/
+docs/
+.git/

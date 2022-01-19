@@ -1,0 +1,9 @@
+[FORMAT]
+max-line-length=300 # this rarely applies, because we always use black to autoformat shorter lines 这很少适用，因为我们总是使用黑色自动格式较短的行
+
+[BASIC]
+# allow single letter variable names 允许使用单字母的变量名
+variable-rgx=[a-z0-9_]{1,30}$
+
+[MESSAGES CONTROL]
+disable=logging-not-lazy,logging-fstring-interpolation,missing-docstring,wildcard-import,unused-wildcard-import,invalid-name,logging-format-interpolation,broad-except,no-else-break,too-many-arguments

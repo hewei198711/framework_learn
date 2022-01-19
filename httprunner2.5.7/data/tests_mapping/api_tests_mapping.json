@@ -1,0 +1,51 @@
+{
+	"project_mapping": {
+		"env": {
+			"uat_host": "rm-wz95gn5v6sxl4iq5uqo.mysql.rds.aliyuncs.com",
+			"base_url": "http://uc2-uat.perfect99.com",
+			"username": "hewei1987",
+			"password": "888888"
+		},
+		"PWD": "D:\\git_ligeit\\test_ucong",
+		"functions": {
+			"hw_get_verifycode": "<function hw_get_verifycode at 0x000001D956497CA0>",
+			"str_replace": "<function str_replace at 0x000001D95712DB80>"
+		},
+		"test_path": "D:\\git_ligeit\\test_ucong\\api\\财务管理\\服务中心银行流水\\汇款.yml"
+	},
+	"apis": [
+        {
+            "name": "/pay/notify/mockBankflow",
+            "request": {
+                "headers": {
+                    "Content-Type": "application/json"
+                },
+                "json": "${body}",
+                "method": "POST",
+                "url": "${base_url}/pay/notify/mockBankflow"
+            },
+            "validate": [
+              {"eq": ["status_code", 200]}
+            ],
+            "variables": {
+                "body": [
+                    {
+                        "accountName": "中国银行",
+                        "accountNo": "942562942562962562",
+                        "bankName": "中国银行广州琶洲支行",
+                        "busiTime": "2021-05-19T09:30:01.261+0800",
+                        "remark": "何伟测试汇款 ",
+                        "tradeAmount ": "200 ",
+                        "tradeOrderNo ": "37 fhw0326002 ",
+                        "companyNo ": "34000 ",
+                        "receiptAccount ": "2011054919200009545 ",
+                        "receiptBankName ": "中国工商银行 "
+                    }
+                ],
+                "base_url ": "$ {ENV(base_url)}"
+            },
+            "path ": "api / 财务管理 / 服务中心银行流水 / 汇款.yml ",
+            "type ": "api "
+        }
+    ]
+}

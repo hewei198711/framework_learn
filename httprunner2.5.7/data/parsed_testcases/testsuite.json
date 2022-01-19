@@ -1,0 +1,980 @@
+[
+    {
+        "config":{
+            "name":"添加服务中心：检查经营地址是否重复",
+            "setup_hooks":[
+                "LazyString(${hw_setup($content_00)})"
+            ],
+            "teardown_hooks":[
+                "LazyString(${hw_teardown($content_00)})"
+            ],
+            "base_url":null,
+            "variables":{
+                "content_00":"用例级别",
+                "content_01":"用例步骤级别1",
+                "content_02":"用例步骤级别2"
+            }
+        },
+        "teststeps":[
+            {
+                "name":"前提条件：登录完美运营后台",
+                "setup_hooks":[
+                    "LazyString(${hw_setup($content_01)})"
+                ],
+                "teardown_hooks":[
+                    "LazyString(${hw_teardown($content_01)})"
+                ],
+                "api":"api/架构基础服务/完美运营后台登陆.yml",
+                "extract":{
+                    "access_token":"content.data.access_token",
+                    "token_type":"content.data.token_type",
+                    "nickname":"content.data.nickname"
+                },
+                "variables":{
+                    "base_url":"LazyString(${ENV(base_url)})",
+                    "key":"LazyString(${hw_login_rsakey($username, $password, 1, $channel)})",
+                    "data":"LazyString(${hw_login_rsakey($username, $password, 0, $channel)})",
+                    "username":"hewei1987",
+                    "password":"888888",
+                    "channel":"op",
+                    "content_00":"用例级别",
+                    "content_01":"用例步骤级别1",
+                    "content_02":"用例步骤级别2"
+                },
+                "request":{
+                    "method":"POST",
+                    "headers":{
+                        "Authorization":"Basic b3BfYXBwOnBlcmZlY3RfcG9ydGFs"
+                    },
+                    "data":{
+                        "key":"LazyString(${key})",
+                        "data":"LazyString(${data})"
+                    },
+                    "url":"LazyString(${base_url}/login)",
+                    "verify":true
+                },
+                "validate":[
+                    "LazyFunction(equals(status_code, 200))",
+                    "LazyFunction(equals(content.code, 200))"
+                ]
+            },
+            {
+                "name":"添加服务中心：失败路径-经营地址和942577的相同检查(广州市有街道且填写)",
+                "setup_hooks":[
+                    "LazyString(${hw_setup($content_02)})"
+                ],
+                "teardown_hooks":[
+                    "LazyString(${hw_teardown($content_02)})"
+                ],
+                "api":"api/服务中心管理/服务中心列表查询/检查经营地址是否重复.yml",
+                "variables":{
+                    "provinceName":"广东省",
+                    "cityName":"广州市",
+                    "areaName":"海珠区",
+                    "streetName":"南洲街道",
+                    "detailAddress":"广州市海珠区同创汇11号",
+                    "access_token":"LazyString(${access_token})",
+                    "token_type":"LazyString(${token_type})",
+                    "base_url":"LazyString(${ENV(base_url)})",
+                    "content_00":"用例级别",
+                    "content_01":"用例步骤级别1",
+                    "content_02":"用例步骤级别2"
+                },
+                "extract":{},
+                "request":{
+                    "headers":{
+                        "Authorization":"LazyString(${token_type} ${access_token})"
+                    },
+                    "method":"GET",
+                    "params":{
+                        "provinceName":"LazyString(${provinceName})",
+                        "cityName":"LazyString(${cityName})",
+                        "areaName":"LazyString(${areaName})",
+                        "streetName":"LazyString(${streetName})",
+                        "detailAddress":"LazyString(${detailAddress})"
+                    },
+                    "url":"LazyString(${base_url}/mgmt/store/checkBusinessAddressIsExist)",
+                    "verify":true
+                },
+                "validate":[
+                    "LazyFunction(equals(status_code, 200))",
+                    "LazyFunction(equals(content.data, 942577))"
+                ]
+            },
+            {
+                "name":"添加服务中心：失败路径-经营地址和902005的相同检查(茂名市有街道但不填)",
+                "api":"api/服务中心管理/服务中心列表查询/检查经营地址是否重复.yml",
+                "variables":{
+                    "provinceName":"广东省",
+                    "cityName":"茂名市",
+                    "areaName":"茂南区",
+                    "streetName":null,
+                    "detailAddress":"油城六路三巷1-01号",
+                    "access_token":"LazyString(${access_token})",
+                    "token_type":"LazyString(${token_type})",
+                    "base_url":"LazyString(${ENV(base_url)})",
+                    "content_00":"用例级别",
+                    "content_01":"用例步骤级别1",
+                    "content_02":"用例步骤级别2"
+                },
+                "extract":{},
+                "request":{
+                    "headers":{
+                        "Authorization":"LazyString(${token_type} ${access_token})"
+                    },
+                    "method":"GET",
+                    "params":{
+                        "provinceName":"LazyString(${provinceName})",
+                        "cityName":"LazyString(${cityName})",
+                        "areaName":"LazyString(${areaName})",
+                        "streetName":"LazyString(${streetName})",
+                        "detailAddress":"LazyString(${detailAddress})"
+                    },
+                    "url":"LazyString(${base_url}/mgmt/store/checkBusinessAddressIsExist)",
+                    "verify":true
+                },
+                "validate":[
+                    "LazyFunction(equals(status_code, 200))",
+                    "LazyFunction(equals(content.data, 902005))"
+                ]
+            },
+            {
+                "name":"添加服务中心：失败路径-经营地址和902128的相同检查(中山市没有区)",
+                "api":"api/服务中心管理/服务中心列表查询/检查经营地址是否重复.yml",
+                "variables":{
+                    "provinceName":"广东省",
+                    "cityName":"中山市",
+                    "areaName":"石岐区街道办事处",
+                    "streetName":null,
+                    "detailAddress":"湖滨北路45号5卡",
+                    "access_token":"LazyString(${access_token})",
+                    "token_type":"LazyString(${token_type})",
+                    "base_url":"LazyString(${ENV(base_url)})",
+                    "content_00":"用例级别",
+                    "content_01":"用例步骤级别1",
+                    "content_02":"用例步骤级别2"
+                },
+                "extract":{},
+                "request":{
+                    "headers":{
+                        "Authorization":"LazyString(${token_type} ${access_token})"
+                    },
+                    "method":"GET",
+                    "params":{
+                        "provinceName":"LazyString(${provinceName})",
+                        "cityName":"LazyString(${cityName})",
+                        "areaName":"LazyString(${areaName})",
+                        "streetName":"LazyString(${streetName})",
+                        "detailAddress":"LazyString(${detailAddress})"
+                    },
+                    "url":"LazyString(${base_url}/mgmt/store/checkBusinessAddressIsExist)",
+                    "verify":true
+                },
+                "validate":[
+                    "LazyFunction(equals(status_code, 200))",
+                    "LazyFunction(equals(content.data, 902128))"
+                ]
+            },
+            {
+                "name":"添加服务中心：失败路径-经营地址和已经取消资格的903698的相同检查(省市区，详细地址相同)",
+                "api":"api/服务中心管理/服务中心列表查询/检查经营地址是否重复.yml",
+                "variables":{
+                    "provinceName":"北京市",
+                    "cityName":"北京市",
+                    "areaName":"东城区",
+                    "streetName":"东华门街道办事处",
+                    "detailAddress":"北京市东城区东华门街道25号自编1620898700163号",
+                    "access_token":"LazyString(${access_token})",
+                    "token_type":"LazyString(${token_type})",
+                    "base_url":"LazyString(${ENV(base_url)})",
+                    "content_00":"用例级别",
+                    "content_01":"用例步骤级别1",
+                    "content_02":"用例步骤级别2"
+                },
+                "extract":{},
+                "request":{
+                    "headers":{
+                        "Authorization":"LazyString(${token_type} ${access_token})"
+                    },
+                    "method":"GET",
+                    "params":{
+                        "provinceName":"LazyString(${provinceName})",
+                        "cityName":"LazyString(${cityName})",
+                        "areaName":"LazyString(${areaName})",
+                        "streetName":"LazyString(${streetName})",
+                        "detailAddress":"LazyString(${detailAddress})"
+                    },
+                    "url":"LazyString(${base_url}/mgmt/store/checkBusinessAddressIsExist)",
+                    "verify":true
+                },
+                "validate":[
+                    "LazyFunction(equals(status_code, 200))",
+                    "LazyFunction(equals(content.data, 903698))"
+                ]
+            },
+            {
+                "name":"添加服务中心：成功路径-经营地址和902128的相同检查(省市区不同，只有详细地址相同)",
+                "api":"api/服务中心管理/服务中心列表查询/检查经营地址是否重复.yml",
+                "variables":{
+                    "provinceName":"广西壮族自治区",
+                    "cityName":"南宁市",
+                    "areaName":"兴宁区",
+                    "streetName":"民生街道办事处",
+                    "detailAddress":"湖滨北路45号5卡",
+                    "access_token":"LazyString(${access_token})",
+                    "token_type":"LazyString(${token_type})",
+                    "base_url":"LazyString(${ENV(base_url)})",
+                    "content_00":"用例级别",
+                    "content_01":"用例步骤级别1",
+                    "content_02":"用例步骤级别2"
+                },
+                "extract":{},
+                "request":{
+                    "headers":{
+                        "Authorization":"LazyString(${token_type} ${access_token})"
+                    },
+                    "method":"GET",
+                    "params":{
+                        "provinceName":"LazyString(${provinceName})",
+                        "cityName":"LazyString(${cityName})",
+                        "areaName":"LazyString(${areaName})",
+                        "streetName":"LazyString(${streetName})",
+                        "detailAddress":"LazyString(${detailAddress})"
+                    },
+                    "url":"LazyString(${base_url}/mgmt/store/checkBusinessAddressIsExist)",
+                    "verify":true
+                },
+                "validate":[
+                    "LazyFunction(equals(status_code, 200))",
+                    "LazyFunction(string_equals(content.data, None))"
+                ]
+            },
+            {
+                "name":"添加服务中心：成功路径-经营地址和902128的相同检查(省市区相同，只有详细地址不同)",
+                "api":"api/服务中心管理/服务中心列表查询/检查经营地址是否重复.yml",
+                "variables":{
+                    "provinceName":"广东省",
+                    "cityName":"中山市",
+                    "areaName":"石岐区街道办事处",
+                    "streetName":null,
+                    "detailAddress":"湖滨北路45号5卡502号房",
+                    "access_token":"LazyString(${access_token})",
+                    "token_type":"LazyString(${token_type})",
+                    "base_url":"LazyString(${ENV(base_url)})",
+                    "content_00":"用例级别",
+                    "content_01":"用例步骤级别1",
+                    "content_02":"用例步骤级别2"
+                },
+                "extract":{},
+                "request":{
+                    "headers":{
+                        "Authorization":"LazyString(${token_type} ${access_token})"
+                    },
+                    "method":"GET",
+                    "params":{
+                        "provinceName":"LazyString(${provinceName})",
+                        "cityName":"LazyString(${cityName})",
+                        "areaName":"LazyString(${areaName})",
+                        "streetName":"LazyString(${streetName})",
+                        "detailAddress":"LazyString(${detailAddress})"
+                    },
+                    "url":"LazyString(${base_url}/mgmt/store/checkBusinessAddressIsExist)",
+                    "verify":true
+                },
+                "validate":[
+                    "LazyFunction(equals(status_code, 200))",
+                    "LazyFunction(string_equals(content.data, None))"
+                ]
+            }
+        ]
+    },
+    {
+        "config":{
+            "name":"添加服务中心：校验证件号唯一性",
+            "setup_hooks":[
+                "LazyString(${hw_setup($content_00)})"
+            ],
+            "teardown_hooks":[
+                "LazyString(${hw_teardown($content_00)})"
+            ],
+            "base_url":null,
+            "variables":{
+                "content_00":"校验证件号唯一性用例级别",
+                "content_01":"校验证件号唯一性用例步骤级别1",
+                "content_02":"校验证件号唯一性用例步骤级别2"
+            }
+        },
+        "teststeps":[
+            {
+                "name":"前提条件：登录完美运营后台",
+                "setup_hooks":[
+                    "LazyString(${hw_setup($content_01)})"
+                ],
+                "teardown_hooks":[
+                    "LazyString(${hw_teardown($content_01)})"
+                ],
+                "api":"api/架构基础服务/完美运营后台登陆.yml",
+                "extract":{
+                    "access_token":"content.data.access_token",
+                    "token_type":"content.data.token_type",
+                    "nickname":"content.data.nickname"
+                },
+                "variables":{
+                    "base_url":"LazyString(${ENV(base_url)})",
+                    "key":"LazyString(${hw_login_rsakey($username, $password, 1, $channel)})",
+                    "data":"LazyString(${hw_login_rsakey($username, $password, 0, $channel)})",
+                    "username":"hewei1987",
+                    "password":"888888",
+                    "channel":"op",
+                    "content_00":"校验证件号唯一性用例级别",
+                    "content_01":"校验证件号唯一性用例步骤级别1",
+                    "content_02":"校验证件号唯一性用例步骤级别2"
+                },
+                "request":{
+                    "method":"POST",
+                    "headers":{
+                        "Authorization":"Basic b3BfYXBwOnBlcmZlY3RfcG9ydGFs"
+                    },
+                    "data":{
+                        "key":"LazyString(${key})",
+                        "data":"LazyString(${data})"
+                    },
+                    "url":"LazyString(${base_url}/login)",
+                    "verify":true
+                },
+                "validate":[
+                    "LazyFunction(equals(status_code, 200))",
+                    "LazyFunction(equals(content.code, 200))"
+                ]
+            },
+            {
+                "name":"添加服务中心：失败路径-校验证件号唯一性（云商身份证号）",
+                "api":"api/服务中心管理/服务中心列表查询/校验证件号唯一性.yml",
+                "variables":{
+                    "certificatesNo":"LazyString(${ENV(certificatesNo_00)})",
+                    "access_token":"LazyString(${access_token})",
+                    "token_type":"LazyString(${token_type})",
+                    "base_url":"LazyString(${ENV(base_url)})",
+                    "content_00":"校验证件号唯一性用例级别",
+                    "content_01":"校验证件号唯一性用例步骤级别1",
+                    "content_02":"校验证件号唯一性用例步骤级别2"
+                },
+                "extract":{},
+                "request":{
+                    "headers":{
+                        "Authorization":"LazyString(${token_type} ${access_token})"
+                    },
+                    "method":"GET",
+                    "params":{
+                        "certificatesNo":"LazyString(${certificatesNo})"
+                    },
+                    "url":"LazyString(${base_url}/mgmt/store/checkStoreCertificatesNoIsExist)",
+                    "verify":true
+                },
+                "validate":[
+                    "LazyFunction(equals(status_code, 200))",
+                    "LazyFunction(equals(content.code, 200))",
+                    "LazyFunction(equals(content.data, True))"
+                ]
+            },
+            {
+                "name":"添加服务中心：失败路径-校验证件号唯一性（已取消资格服务中心902031的身份证号）",
+                "api":"api/服务中心管理/服务中心列表查询/校验证件号唯一性.yml",
+                "variables":{
+                    "certificatesNo":440121195704200011,
+                    "access_token":"LazyString(${access_token})",
+                    "token_type":"LazyString(${token_type})",
+                    "base_url":"LazyString(${ENV(base_url)})",
+                    "content_00":"校验证件号唯一性用例级别",
+                    "content_01":"校验证件号唯一性用例步骤级别1",
+                    "content_02":"校验证件号唯一性用例步骤级别2"
+                },
+                "extract":{},
+                "request":{
+                    "headers":{
+                        "Authorization":"LazyString(${token_type} ${access_token})"
+                    },
+                    "method":"GET",
+                    "params":{
+                        "certificatesNo":"LazyString(${certificatesNo})"
+                    },
+                    "url":"LazyString(${base_url}/mgmt/store/checkStoreCertificatesNoIsExist)",
+                    "verify":true
+                },
+                "validate":[
+                    "LazyFunction(equals(status_code, 200))",
+                    "LazyFunction(equals(content.code, 200))",
+                    "LazyFunction(equals(content.data, True))"
+                ]
+            },
+            {
+                "name":"添加服务中心：失败路径-校验证件号唯一性（微店身份证号）",
+                "api":"api/服务中心管理/服务中心列表查询/校验证件号唯一性.yml",
+                "variables":{
+                    "certificatesNo":"LazyString(${ENV(certificatesNo_01)})",
+                    "access_token":"LazyString(${access_token})",
+                    "token_type":"LazyString(${token_type})",
+                    "base_url":"LazyString(${ENV(base_url)})",
+                    "content_00":"校验证件号唯一性用例级别",
+                    "content_01":"校验证件号唯一性用例步骤级别1",
+                    "content_02":"校验证件号唯一性用例步骤级别2"
+                },
+                "extract":{},
+                "request":{
+                    "headers":{
+                        "Authorization":"LazyString(${token_type} ${access_token})"
+                    },
+                    "method":"GET",
+                    "params":{
+                        "certificatesNo":"LazyString(${certificatesNo})"
+                    },
+                    "url":"LazyString(${base_url}/mgmt/store/checkStoreCertificatesNoIsExist)",
+                    "verify":true
+                },
+                "validate":[
+                    "LazyFunction(equals(status_code, 200))",
+                    "LazyFunction(equals(content.code, 200))",
+                    "LazyFunction(equals(content.data, True))"
+                ]
+            },
+            {
+                "name":"添加服务中心：失败路径-校验证件号唯一性（其他证件号）",
+                "api":"api/服务中心管理/服务中心列表查询/校验证件号唯一性.yml",
+                "variables":{
+                    "certificatesNo":"LazyString(${ENV(certificatesNo_02)})",
+                    "access_token":"LazyString(${access_token})",
+                    "token_type":"LazyString(${token_type})",
+                    "base_url":"LazyString(${ENV(base_url)})",
+                    "content_00":"校验证件号唯一性用例级别",
+                    "content_01":"校验证件号唯一性用例步骤级别1",
+                    "content_02":"校验证件号唯一性用例步骤级别2"
+                },
+                "extract":{},
+                "request":{
+                    "headers":{
+                        "Authorization":"LazyString(${token_type} ${access_token})"
+                    },
+                    "method":"GET",
+                    "params":{
+                        "certificatesNo":"LazyString(${certificatesNo})"
+                    },
+                    "url":"LazyString(${base_url}/mgmt/store/checkStoreCertificatesNoIsExist)",
+                    "verify":true
+                },
+                "validate":[
+                    "LazyFunction(equals(status_code, 200))",
+                    "LazyFunction(equals(content.code, 200))",
+                    "LazyFunction(equals(content.data, True))"
+                ]
+            },
+            {
+                "name":"添加服务中心：成功路径-校验证件号唯一性（身份证号）",
+                "api":"api/服务中心管理/服务中心列表查询/校验证件号唯一性.yml",
+                "variables":{
+                    "certificatesNo":412828197207120175,
+                    "access_token":"LazyString(${access_token})",
+                    "token_type":"LazyString(${token_type})",
+                    "base_url":"LazyString(${ENV(base_url)})",
+                    "content_00":"校验证件号唯一性用例级别",
+                    "content_01":"校验证件号唯一性用例步骤级别1",
+                    "content_02":"校验证件号唯一性用例步骤级别2"
+                },
+                "extract":{},
+                "request":{
+                    "headers":{
+                        "Authorization":"LazyString(${token_type} ${access_token})"
+                    },
+                    "method":"GET",
+                    "params":{
+                        "certificatesNo":"LazyString(${certificatesNo})"
+                    },
+                    "url":"LazyString(${base_url}/mgmt/store/checkStoreCertificatesNoIsExist)",
+                    "verify":true
+                },
+                "validate":[
+                    "LazyFunction(equals(status_code, 200))",
+                    "LazyFunction(equals(content.code, 200))",
+                    "LazyFunction(string_equals(content.data, False))"
+                ]
+            },
+            {
+                "name":"添加服务中心：成功路径-校验证件号唯一性（其他证件号）",
+                "setup_hooks":[
+                    "LazyString(${hw_setup($content_02)})"
+                ],
+                "teardown_hooks":[
+                    "LazyString(${hw_teardown($content_02)})"
+                ],
+                "api":"api/服务中心管理/服务中心列表查询/校验证件号唯一性.yml",
+                "variables":{
+                    "certificatesNo":18628790008,
+                    "access_token":"LazyString(${access_token})",
+                    "token_type":"LazyString(${token_type})",
+                    "base_url":"LazyString(${ENV(base_url)})",
+                    "content_00":"校验证件号唯一性用例级别",
+                    "content_01":"校验证件号唯一性用例步骤级别1",
+                    "content_02":"校验证件号唯一性用例步骤级别2"
+                },
+                "extract":{},
+                "request":{
+                    "headers":{
+                        "Authorization":"LazyString(${token_type} ${access_token})"
+                    },
+                    "method":"GET",
+                    "params":{
+                        "certificatesNo":"LazyString(${certificatesNo})"
+                    },
+                    "url":"LazyString(${base_url}/mgmt/store/checkStoreCertificatesNoIsExist)",
+                    "verify":true
+                },
+                "validate":[
+                    "LazyFunction(equals(status_code, 200))",
+                    "LazyFunction(equals(content.code, 200))",
+                    "LazyFunction(string_equals(content.data, False))"
+                ]
+            }
+        ]
+    },
+    {
+        "config":{
+            "name":"添加服务中心：检查服务中心名称是否重复",
+            "base_url":null
+        },
+        "teststeps":[
+            {
+                "name":"前提条件：登录完美运营后台",
+                "api":"api/架构基础服务/完美运营后台登陆.yml",
+                "extract":{
+                    "access_token":"content.data.access_token",
+                    "token_type":"content.data.token_type"
+                },
+                "variables":{
+                    "base_url":"LazyString(${ENV(base_url)})",
+                    "key":"LazyString(${hw_login_rsakey($username, $password, 1, $channel)})",
+                    "data":"LazyString(${hw_login_rsakey($username, $password, 0, $channel)})",
+                    "username":"hewei1987",
+                    "password":"888888",
+                    "channel":"op"
+                },
+                "request":{
+                    "method":"POST",
+                    "headers":{
+                        "Authorization":"Basic b3BfYXBwOnBlcmZlY3RfcG9ydGFs"
+                    },
+                    "data":{
+                        "key":"LazyString(${key})",
+                        "data":"LazyString(${data})"
+                    },
+                    "url":"LazyString(${base_url}/login)",
+                    "verify":true
+                },
+                "validate":[
+                    "LazyFunction(equals(status_code, 200))",
+                    "LazyFunction(equals(content.code, 200))"
+                ]
+            },
+            {
+                "name":"添加服务中心：失败路径-服务中心名称和非取消资格服务中心902003名称重复",
+                "api":"api/服务中心管理/服务中心列表查询/检查服务中心名称是否重复.yml",
+                "variables":{
+                    "memberType":3,
+                    "storeName":"鹤山市沙坪镇百胜咨询服务中心",
+                    "access_token":"LazyString(${access_token})",
+                    "token_type":"LazyString(${token_type})",
+                    "base_url":"LazyString(${ENV(base_url)})"
+                },
+                "extract":{},
+                "request":{
+                    "headers":{
+                        "Authorization":"LazyString(${token_type} ${access_token})"
+                    },
+                    "method":"GET",
+                    "params":{
+                        "memberType":"LazyString(${memberType})",
+                        "storeName":"LazyString(${storeName})"
+                    },
+                    "url":"LazyString(${base_url}/mgmt/store/checkStoreNameIsExist)",
+                    "verify":true
+                },
+                "validate":[
+                    "LazyFunction(equals(status_code, 200))",
+                    "LazyFunction(equals(content.code, 0))"
+                ]
+            },
+            {
+                "name":"添加服务中心：成功路径-服务中心名称和结点/取消服务中心902028名称重复（已取消资格）",
+                "api":"api/服务中心管理/服务中心列表查询/检查服务中心名称是否重复.yml",
+                "variables":{
+                    "memberType":3,
+                    "storeName":"河源市源城区美善如服务部",
+                    "access_token":"LazyString(${access_token})",
+                    "token_type":"LazyString(${token_type})",
+                    "base_url":"LazyString(${ENV(base_url)})"
+                },
+                "extract":{},
+                "request":{
+                    "headers":{
+                        "Authorization":"LazyString(${token_type} ${access_token})"
+                    },
+                    "method":"GET",
+                    "params":{
+                        "memberType":"LazyString(${memberType})",
+                        "storeName":"LazyString(${storeName})"
+                    },
+                    "url":"LazyString(${base_url}/mgmt/store/checkStoreNameIsExist)",
+                    "verify":true
+                },
+                "validate":[
+                    "LazyFunction(equals(status_code, 200))",
+                    "LazyFunction(equals(content.code, 200))"
+                ]
+            },
+            {
+                "name":"添加服务中心：成功路径-服务中心名称和结点/取消服务中心902026名称重复（未取消资格）",
+                "api":"api/服务中心管理/服务中心列表查询/检查服务中心名称是否重复.yml",
+                "variables":{
+                    "memberType":3,
+                    "storeName":"博罗县百翔日用品服务部",
+                    "access_token":"LazyString(${access_token})",
+                    "token_type":"LazyString(${token_type})",
+                    "base_url":"LazyString(${ENV(base_url)})"
+                },
+                "extract":{},
+                "request":{
+                    "headers":{
+                        "Authorization":"LazyString(${token_type} ${access_token})"
+                    },
+                    "method":"GET",
+                    "params":{
+                        "memberType":"LazyString(${memberType})",
+                        "storeName":"LazyString(${storeName})"
+                    },
+                    "url":"LazyString(${base_url}/mgmt/store/checkStoreNameIsExist)",
+                    "verify":true
+                },
+                "validate":[
+                    "LazyFunction(equals(status_code, 200))",
+                    "LazyFunction(equals(content.code, 200))"
+                ]
+            },
+            {
+                "name":"添加服务中心：成功路径-服务中心名称和已取消（未结清账务）服务中心902036名称重复（未取消资格）",
+                "api":"api/服务中心管理/服务中心列表查询/检查服务中心名称是否重复.yml",
+                "variables":{
+                    "memberType":3,
+                    "storeName":"鹤山市沙坪宛霖商品信息咨询服务部",
+                    "access_token":"LazyString(${access_token})",
+                    "token_type":"LazyString(${token_type})",
+                    "base_url":"LazyString(${ENV(base_url)})"
+                },
+                "extract":{},
+                "request":{
+                    "headers":{
+                        "Authorization":"LazyString(${token_type} ${access_token})"
+                    },
+                    "method":"GET",
+                    "params":{
+                        "memberType":"LazyString(${memberType})",
+                        "storeName":"LazyString(${storeName})"
+                    },
+                    "url":"LazyString(${base_url}/mgmt/store/checkStoreNameIsExist)",
+                    "verify":true
+                },
+                "validate":[
+                    "LazyFunction(equals(status_code, 200))",
+                    "LazyFunction(equals(content.code, 200))"
+                ]
+            },
+            {
+                "name":"添加服务中心：成功路径-服务中心名称和油葱微店（结点/取消）服务中心903133名称重复（未取消资格）",
+                "api":"api/服务中心管理/服务中心列表查询/检查服务中心名称是否重复.yml",
+                "variables":{
+                    "memberType":3,
+                    "storeName":"北京吉成信信息咨询有限公司.",
+                    "access_token":"LazyString(${access_token})",
+                    "token_type":"LazyString(${token_type})",
+                    "base_url":"LazyString(${ENV(base_url)})"
+                },
+                "extract":{},
+                "request":{
+                    "headers":{
+                        "Authorization":"LazyString(${token_type} ${access_token})"
+                    },
+                    "method":"GET",
+                    "params":{
+                        "memberType":"LazyString(${memberType})",
+                        "storeName":"LazyString(${storeName})"
+                    },
+                    "url":"LazyString(${base_url}/mgmt/store/checkStoreNameIsExist)",
+                    "verify":true
+                },
+                "validate":[
+                    "LazyFunction(equals(status_code, 200))",
+                    "LazyFunction(equals(content.code, 200))"
+                ]
+            },
+            {
+                "name":"添加服务中心：失败路径-服务中心名称和服务公司名称重复（济南市莱芜高新区福莱信息咨询服务部）",
+                "api":"api/服务中心管理/服务中心列表查询/检查服务中心名称是否重复.yml",
+                "variables":{
+                    "memberType":3,
+                    "storeName":"济南市莱芜高新区福莱信息咨询服务部",
+                    "access_token":"LazyString(${access_token})",
+                    "token_type":"LazyString(${token_type})",
+                    "base_url":"LazyString(${ENV(base_url)})"
+                },
+                "extract":{},
+                "request":{
+                    "headers":{
+                        "Authorization":"LazyString(${token_type} ${access_token})"
+                    },
+                    "method":"GET",
+                    "params":{
+                        "memberType":"LazyString(${memberType})",
+                        "storeName":"LazyString(${storeName})"
+                    },
+                    "url":"LazyString(${base_url}/mgmt/store/checkStoreNameIsExist)",
+                    "verify":true
+                },
+                "validate":[
+                    "LazyFunction(equals(status_code, 200))",
+                    "LazyFunction(equals(content.code, 0))"
+                ]
+            },
+            {
+                "name":"添加服务中心：失败路径-油葱微店名称和非取消资格油葱微店902137名称相同",
+                "api":"api/服务中心管理/服务中心列表查询/检查服务中心名称是否重复.yml",
+                "variables":{
+                    "memberType":4,
+                    "storeName":"广州市海珠区德宇商品信息咨询服务部",
+                    "access_token":"LazyString(${access_token})",
+                    "token_type":"LazyString(${token_type})",
+                    "base_url":"LazyString(${ENV(base_url)})"
+                },
+                "extract":{},
+                "request":{
+                    "headers":{
+                        "Authorization":"LazyString(${token_type} ${access_token})"
+                    },
+                    "method":"GET",
+                    "params":{
+                        "memberType":"LazyString(${memberType})",
+                        "storeName":"LazyString(${storeName})"
+                    },
+                    "url":"LazyString(${base_url}/mgmt/store/checkStoreNameIsExist)",
+                    "verify":true
+                },
+                "validate":[
+                    "LazyFunction(equals(status_code, 200))",
+                    "LazyFunction(equals(content.code, 0))"
+                ]
+            },
+            {
+                "name":"添加服务中心：成功路径-油葱微店名称和油葱微店（结点/取消）的油葱微店904348名称相同（已取消资格）",
+                "api":"api/服务中心管理/服务中心列表查询/检查服务中心名称是否重复.yml",
+                "variables":{
+                    "memberType":4,
+                    "storeName":"汽车经济技术开发区春怡日用品咨询服务部.",
+                    "access_token":"LazyString(${access_token})",
+                    "token_type":"LazyString(${token_type})",
+                    "base_url":"LazyString(${ENV(base_url)})"
+                },
+                "extract":{},
+                "request":{
+                    "headers":{
+                        "Authorization":"LazyString(${token_type} ${access_token})"
+                    },
+                    "method":"GET",
+                    "params":{
+                        "memberType":"LazyString(${memberType})",
+                        "storeName":"LazyString(${storeName})"
+                    },
+                    "url":"LazyString(${base_url}/mgmt/store/checkStoreNameIsExist)",
+                    "verify":true
+                },
+                "validate":[
+                    "LazyFunction(equals(status_code, 200))",
+                    "LazyFunction(equals(content.code, 200))"
+                ]
+            },
+            {
+                "name":"添加服务中心：成功路径-油葱微店名称和油葱微店（结点/取消）的油葱微店903573名称相同（未取消资格）",
+                "api":"api/服务中心管理/服务中心列表查询/检查服务中心名称是否重复.yml",
+                "variables":{
+                    "memberType":4,
+                    "storeName":"北京飞泓益康信息咨询有限公司",
+                    "access_token":"LazyString(${access_token})",
+                    "token_type":"LazyString(${token_type})",
+                    "base_url":"LazyString(${ENV(base_url)})"
+                },
+                "extract":{},
+                "request":{
+                    "headers":{
+                        "Authorization":"LazyString(${token_type} ${access_token})"
+                    },
+                    "method":"GET",
+                    "params":{
+                        "memberType":"LazyString(${memberType})",
+                        "storeName":"LazyString(${storeName})"
+                    },
+                    "url":"LazyString(${base_url}/mgmt/store/checkStoreNameIsExist)",
+                    "verify":true
+                },
+                "validate":[
+                    "LazyFunction(equals(status_code, 200))",
+                    "LazyFunction(equals(content.code, 200))"
+                ]
+            },
+            {
+                "name":"添加服务中心：成功路径-油葱微店名称和结点/取消的油葱微店902050名称相同（已取消资格）",
+                "api":"api/服务中心管理/服务中心列表查询/检查服务中心名称是否重复.yml",
+                "variables":{
+                    "memberType":4,
+                    "storeName":"深圳市龙华新区大浪义善源日用品商行",
+                    "access_token":"LazyString(${access_token})",
+                    "token_type":"LazyString(${token_type})",
+                    "base_url":"LazyString(${ENV(base_url)})"
+                },
+                "extract":{},
+                "request":{
+                    "headers":{
+                        "Authorization":"LazyString(${token_type} ${access_token})"
+                    },
+                    "method":"GET",
+                    "params":{
+                        "memberType":"LazyString(${memberType})",
+                        "storeName":"LazyString(${storeName})"
+                    },
+                    "url":"LazyString(${base_url}/mgmt/store/checkStoreNameIsExist)",
+                    "verify":true
+                },
+                "validate":[
+                    "LazyFunction(equals(status_code, 200))",
+                    "LazyFunction(equals(content.code, 200))"
+                ]
+            },
+            {
+                "name":"添加服务中心：成功路径-油葱微店名称和油葱微店（已取消未结清账务）的油葱微店914354名称相同（未取消资格）",
+                "api":"api/服务中心管理/服务中心列表查询/检查服务中心名称是否重复.yml",
+                "variables":{
+                    "memberType":4,
+                    "storeName":"山西泰江商务咨询有限公司.",
+                    "access_token":"LazyString(${access_token})",
+                    "token_type":"LazyString(${token_type})",
+                    "base_url":"LazyString(${ENV(base_url)})"
+                },
+                "extract":{},
+                "request":{
+                    "headers":{
+                        "Authorization":"LazyString(${token_type} ${access_token})"
+                    },
+                    "method":"GET",
+                    "params":{
+                        "memberType":"LazyString(${memberType})",
+                        "storeName":"LazyString(${storeName})"
+                    },
+                    "url":"LazyString(${base_url}/mgmt/store/checkStoreNameIsExist)",
+                    "verify":true
+                },
+                "validate":[
+                    "LazyFunction(equals(status_code, 200))",
+                    "LazyFunction(equals(content.code, 200))"
+                ]
+            },
+            {
+                "name":"添加服务中心：成功路径-服务中心名称和服务公司名称重复（济南市莱芜高新区福莱信息咨询服务部）",
+                "api":"api/服务中心管理/服务中心列表查询/检查服务中心名称是否重复.yml",
+                "variables":{
+                    "memberType":4,
+                    "storeName":"济南市莱芜高新区福莱信息咨询服务部",
+                    "access_token":"LazyString(${access_token})",
+                    "token_type":"LazyString(${token_type})",
+                    "base_url":"LazyString(${ENV(base_url)})"
+                },
+                "extract":{},
+                "request":{
+                    "headers":{
+                        "Authorization":"LazyString(${token_type} ${access_token})"
+                    },
+                    "method":"GET",
+                    "params":{
+                        "memberType":"LazyString(${memberType})",
+                        "storeName":"LazyString(${storeName})"
+                    },
+                    "url":"LazyString(${base_url}/mgmt/store/checkStoreNameIsExist)",
+                    "verify":true
+                },
+                "validate":[
+                    "LazyFunction(equals(status_code, 200))",
+                    "LazyFunction(equals(content.code, 200))"
+                ]
+            }
+        ]
+    },
+    {
+        "config":{
+            "name":"添加服务中心：查询所在地是否存在可用仓库",
+            "base_url":null
+        },
+        "teststeps":[
+            {
+                "name":"前提条件：登录完美运营后台",
+                "api":"api/架构基础服务/完美运营后台登陆.yml",
+                "extract":{
+                    "access_token":"content.data.access_token",
+                    "token_type":"content.data.token_type"
+                },
+                "variables":{
+                    "base_url":"LazyString(${ENV(base_url)})",
+                    "key":"LazyString(${hw_login_rsakey($username, $password, 1, $channel)})",
+                    "data":"LazyString(${hw_login_rsakey($username, $password, 0, $channel)})",
+                    "username":"hewei1987",
+                    "password":"888888",
+                    "channel":"op"
+                },
+                "request":{
+                    "method":"POST",
+                    "headers":{
+                        "Authorization":"Basic b3BfYXBwOnBlcmZlY3RfcG9ydGFs"
+                    },
+                    "data":{
+                        "key":"LazyString(${key})",
+                        "data":"LazyString(${data})"
+                    },
+                    "url":"LazyString(${base_url}/login)",
+                    "verify":true
+                },
+                "validate":[
+                    "LazyFunction(equals(status_code, 200))",
+                    "LazyFunction(equals(content.code, 200))"
+                ]
+            },
+            {
+                "name":"添加服务中心：成功路径-查询所在地是否存在可用仓库（北京市110100000000）",
+                "api":"api/服务中心管理/服务中心列表查询/查询所在地是否存在可用仓库.yml",
+                "variables":{
+                    "provinceCode":110100000000,
+                    "access_token":"LazyString(${access_token})",
+                    "token_type":"LazyString(${token_type})",
+                    "base_url":"LazyString(${ENV(base_url)})"
+                },
+                "extract":{},
+                "request":{
+                    "headers":{
+                        "Authorization":"LazyString(${token_type} ${access_token})"
+                    },
+                    "method":"GET",
+                    "params":{
+                        "provinceCode":"LazyString(${provinceCode})"
+                    },
+                    "url":"LazyString(${base_url}/mgmt/sys/checkWareByProvinceCode)",
+                    "verify":true
+                },
+                "validate":[
+                    "LazyFunction(equals(status_code, 200))",
+                    "LazyFunction(equals(content.data, True))"
+                ]
+            }
+        ]
+    }
+]

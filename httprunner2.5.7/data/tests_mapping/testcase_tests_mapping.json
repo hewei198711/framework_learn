@@ -1,0 +1,304 @@
+
+
+{
+	"project_mapping": {
+		"env": {
+             "uat_host": "rm-wz95gn5v6sxl4iq5uqo.mysql.rds.aliyuncs.com",
+             "uat_port": "3306",
+             "uat_user": "perfectmall",
+             "uat_passwd": "lige@2020",
+             "base_url": "http://uc2-uat.perfect99.com",
+             "username": "hewei1987",
+             "password": "888888",
+             "access_token": "ea0a2895-b7de-4636-933a-64027dcba1dc",
+             "token_type": "bearer",
+             "account_01": "6226090000000048",
+             "accountBank_01": "招商银行",
+             "accountName_01 ": "张三 ",
+             "branch_01 ": "招商银行广州琶洲支行 ",
+             "cardNo ": "3000003173 ",
+             "cardNo_01 ": "12664865 ",
+             "cardNo_02 ": "3000003181 ",
+             "cardNo_03 ": "3000003180 ",
+             "certificatesNo_00 ": "412828197207120174 ",
+             "certificatesNo_01 ": "440825199001011275 ",
+             "certificatesNo_02 ": "18928790008 "
+        },
+        "PWD ": "D: \\git_ligeit\\ test_ucong ",
+        "functions ": {
+             "hw_get_verifycode ": "<function hw_get_verifycode at 0x000001D466DD6CA0>",
+             "str_replace ": "<function str_replace at 0x000001D467A6AB80>",
+             "hw_login_rsakey ": "<function hw_login_rsakey at 0x000001D467A6AC10>",
+             "hw_setup ": "<function hw_setup at 0x000001D467A6ACA0>",
+             "hw_teardown ": "<function hw_teardown at 0x000001D467A6AD30 >",
+             "hw_rsp_parser": "< function hw_rsp_parser at 0x000001D467A6ADC0 >",
+             "hw_connect_mysql": "< function hw_connect_mysql at 0x000001D467A6AE50 >",
+             "hw_select_from_table": "< function hw_select_from_table at 0x000001D467A6AEE0 >",
+             "hw_insert_into_table": "< function hw_insert_into_table at 0x000001D467A6AF70 >"
+        },
+        "test_path": "D:\\git_ligeit\\test_ucong\\testcases\\服务中心管理\\服务中心列表查询\\新建服务中心\\ 校验证件号唯一性.yml"
+    },
+    "testcases ": [
+        {
+             "config ": {
+                  "name ": "添加服务中心： 校验证件号唯一性 ",
+                  "variables ": {
+                       "content_00 ": "校验证件号唯一性用例级别 ",
+                       "content_01 ": "校验证件号唯一性用例步骤级别1 ",
+                       "content_02 ": "校验证件号唯一性用例步骤级别2 "
+                  },
+                  "setup_hooks ": ["$ {hw_setup($content_00)}"],
+                  "teardown_hooks ": ["$ {hw_teardown($content_00)}"]
+             },
+             "teststeps ": [
+                  {
+                       "name ": "前提条件： 登录完美运营后台 ",
+                       "setup_hooks ": ["${hw_setup($content_01)}"],
+                       "teardown_hooks": ["${hw_teardown($content_01)}"],
+                       "api": "api/架构基础服务/完美运营后台登陆.yml",
+                       "extract": [
+                            {"access_token": "content.data.access_token"},
+                            {"token_type": "content.data.token_type "},
+                            {"nickname ": "content.data.nickname "}
+                       ],
+                       "api_def ": {
+                            "name ": " / login ",
+                            "request ": {
+                                 "method ": "POST ",
+                                 "headers ": {
+                                      "Authorization ": "Basic b3BfYXBwOnBlcmZlY3RfcG9ydGFs "
+                                 },
+                                 "data ": {
+                                      "key ": "$ {key}",
+                                      "data ": "$ {data}"
+                                 },
+                                 "url ": "$ {base_url}/login"
+                            },
+                            "variables": {
+                                      "base_url": "${ENV(base_url)}",
+                                      "key": "${hw_login_rsakey($username, $password, 1, $channel)}",
+                                      "data": "${hw_login_rsakey($username, $password, 0, $channel)}",
+                                      "username ": "hewei1987 ",
+                                      "password ": "888888 ",
+                                      "channel ": "op "
+                                 },
+                            "validate ": [
+                                 {"eq ": ["status_code ", 200]},
+                                 {"eq ": ["content.code ", 200]}
+                            ]
+                       }
+                  },
+                  {
+                       "name ": "添加服务中心： 失败路径 - 校验证件号唯一性（ 云商身份证号） ",
+                       "api ": "api / 服务中心管理 / 服务中心列表查询 / 校验证件号唯一性.yml ",
+                       "variables ": {
+                            "certificatesNo ": "$ {ENV(certificatesNo_00)}",
+                            "access_token ": "$ {access_token}",
+                            "token_type ": "$ {token_type}"
+                       },
+                       "validate ": [
+                            {"eq ": ["content.data ", true]}
+                       ],
+                       "api_def ": {
+                            "name ": " / mgmt / store / checkStoreCertificatesNoIsExist ",
+                            "request ": {
+                                 "headers ": {"Authorization ": "$ {token_type}$ {access_token}"},
+                                 "method ": "GET ",
+                                 "params ": {"certificatesNo ": "$ {certificatesNo}"},
+                                 "url ": "$ {base_url}/mgmt/store / checkStoreCertificatesNoIsExist "
+                            },
+                            "validate ": [
+                                 {"eq ": ["status_code ", 200]},
+                                 {"eq ": ["content.code ",200]}
+                            ],
+                            "variables": {
+                                 "certificatesNo": 440825199001010001,
+                                 "access_token": "${ENV(access_token)}",
+                                 "token_type": "${ENV(token_type)}",
+                                 "base_url": "${ENV(base_url)}"
+                            }
+                       }
+                  },
+                  {
+                       "name": "添加服务中心：失败路径-校验证件号唯一性（ 已取消资格服务中心902031的身份证号） ", 
+                       "api ": "api / 服务中心管理 / 服务中心列表查询 / 校验证件号唯一性.yml ", 
+                       "variables ": {
+                            "certificatesNo ": 440121195704200011,
+                            "access_token ": "$ {access_token}",
+                            "token_type ": "$ {token_type}"
+                       },
+                       "validate ": [
+                            {"eq ": ["content.data ", true]}
+                       ],
+                       "api_def ": {
+                            "name ": " / mgmt / store / checkStoreCertificatesNoIsExist ",
+                            "request ": {
+                                 "headers ": {
+                                      "Authorization ": "$ {token_type}$ {access_token}"
+                                 },
+                                 "method ": "GET ",
+                                 "params ": {
+                                      "certificatesNo ": "$ {certificatesNo}"
+                                 },
+                                 "url ": "$ {base_url}/mgmt/store / checkStoreCertificatesNoIsExist "
+                            },
+                             "validate ": [
+                                  {"eq ": ["status_code ", 200]},
+                                  {"eq ": ["content.code ", 200]}
+                             ],
+                             "variables ": {
+                                  "certificatesNo ": 440825199001010001,
+                                  "access_token ": "$ {ENV(access_token)}",
+                                  "token_type ": "$ {ENV(token_type)}",
+                                  "base_url ": "$ {ENV(base_url)}"
+                                 }
+                       }
+                  },
+                  {
+                       "name ": "添加服务中心： 失败路径 - 校验证件号唯一性（ 微店身份证号） ",
+                       "api ": "api / 服务中心管理 / 服务中心列表查询 / 校验证件号唯一性.yml ",
+                       "variables ": {
+                            "certificatesNo ": "$ {ENV(certificatesNo_01)}",
+                            "access_token ": "$ {access_token}",
+                            "token_type": "${token_type}"
+                       },
+                       "validate": [
+                            {"eq": ["content.data", true]}
+                       ],
+                       "api_def": {
+                            "name": "/mgmt/store/checkStoreCertificatesNoIsExist",
+                            "request": {
+                                 "headers": {
+                                      "Authorization": "${token_type} ${access_token}"
+                                 },
+                                 "method ": "GET ",
+                                 "params ": {
+                                      "certificatesNo ": "$ {certificatesNo}"
+                                 },
+                                 "url ": "$ {base_url}/mgmt/store / checkStoreCertificatesNoIsExist "
+                            },
+                            "validate ": [
+                                 {"eq ": ["status_code ", 200]},
+                                 {"eq ": ["content.code ", 200]}
+                            ],
+                            "variables ": {
+                                 "certificatesNo ": 440825199001010001,
+                                 "access_token ": "$ {ENV(access_token)}",
+                                 "token_type ": "$ {ENV(token_type)}",
+                                 "base_url ": "$ {ENV(base_url)}"
+                            }
+                       }
+                  },
+                  {
+                       "name ": "添加服务中心：失败路径 - 校验证件号唯一性（ 其他证件号） ",
+                       "api ": "api / 服务中心管理 / 服务中心列表查询 / 校验证件号唯一性.yml ",
+                       "variables ": {
+                            "certificatesNo ": "$ {ENV(certificatesNo_02)}",
+                            "access_token ": "$ {access_token}",
+                            "token_type ": "$ {token_type}"
+                       },
+                       "validate ": [
+                            {"eq ": ["content.data ", true]}
+                       ],
+                       "api_def ": {
+                            "name ": " / mgmt / store / checkStoreCertificatesNoIsExist ",
+                            "request ": {
+                                 "headers ": {
+                                      "Authorization ": "$ {token_type}$ {accesstoken}"
+                                 },
+                                 "method ": "GET ",
+                                 "params ": {
+                                      "certificatesNo ": "$ {certificatesNo}"
+                                 },
+                                 "url ": "$ {base_url}/mgmt/store / checkStoreCertificatesNoIsExist "
+                            },
+                            "validate ": [
+                                 {"eq ": ["status_code ", 200]},
+                                 {"eq ": ["content.code ", 200]}
+                            ],
+                            "variables ": {
+                                 "certificatesNo ": 440825199001010001,
+                                 "access_token ": "$ {ENV(access_token)}",
+                                 "token_type ": "$ {ENV(token_type)}",
+                                 "base_url ": "$ {ENV(base_url)}"
+                            }
+                       }
+                  },
+                  {
+                       "name ": "添加服务中心： 成功路径 - 校验证件号唯一性（ 身份证号） ",
+                       "api ": "api / 服务中心管理 / 服务中心列表查询 / 校验证件号唯一性.yml ",
+                       "variables ": {
+                            "certificatesNo ": 412828197207120175,
+                            "access_token ": "$ {access_token}",
+                            "token_type ": "$ {token_type}"
+                       },
+                       "validate ": [
+                            {"str_eq ": ["content.data ", false]}
+                       ],
+                       "api_def ": {
+                            "name ": " / mgmt / store / checkStoreCertificatesNoIsExist ",
+                            "request ": {
+                                 "headers ": {
+                                      "Authorization ": "$ {token_type}$ {access_token}"
+                                 },
+                                 "method": "GET",
+                                 "params": {
+                                      "certificatesNo": "${certificatesNo}"
+                                 },
+                                 "url": "${base_url}/mgmt/store/checkStoreCertificatesNoIsExist"
+                            },
+                            "validate": [
+                                 {"eq": ["status_code", 200]},
+                                 {"eq": ["content.code", 200]}
+                            ],
+                            "variables": {
+                                 "certificatesNo": 440825199001010001,
+                                 "access_token": "${ENV(access_token)}",
+                                 "token_type": "${ENV(token_type)}",
+                                 "base_url": "${ENV(base_url)}"
+                            }
+                       }
+                  },
+                  {
+                       "name": "添加服务中心：成功路径-校验证件号唯一性（ 其他证件号） ",
+                       "setup_hooks ": ["$ {hw_setup($content_02)}"],
+                       "teardown_hooks ": ["$ {hw_teardown($content_02)}"],
+                       "api ": "api / 服务中心管理 / 服务中心列表查询 / 校验证件号唯一性.yml ",
+                       "variables ": {
+                            "certificatesNo ": 18628790008,
+                            "access_token ": "$ {access_token}",
+                            "token_type ": "$ {token_type}"
+                       },
+                       "validate ": [
+                            {"str_eq ": ["content.data ", false]}
+                       ],
+                       "api_def ": {
+                            "name ": " / mgmt / store / checkStoreCertificatesNoIsExist ",
+                            "request ": {
+                                 "headers ": {
+                                      "Authorization ": "$ {token_type}$ {access_token}"
+                                 },
+                                 "method ": "GET ",
+                                 "params ": {
+                                      "certificatesNo ": "$ {certificatesNo}"
+                                 },
+                                 "url ": "$ {base_url}/mgmt/store / checkStoreCertificatesNoIsExist "
+                            },
+                            "validate ": [
+                                 {"eq ": ["status_code ", 200]},
+                                 {"eq ": ["content.code ", 200]}
+                            ],
+                            "variables ": {
+                                 "certificatesNo ": 440825199001010001,
+                                 "access_token ": "$ {ENV(access_token)}",
+                                 "token_type ": "$ {ENV(token_typ e)}",
+                                 "base_url ": "$ {ENV(base_url)}"
+                            }
+                       }
+                  }
+             ],
+             "path ": "testcases / 服务中心管理 / 服务中心列表查询 / 新建服务中心 / 校验证件号唯一性.yml ",
+             "type ": "testcase "
+        }
+    ]
+}

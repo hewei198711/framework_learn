@@ -1,0 +1,1282 @@
+{
+	"project_mapping": {
+		"env": {
+			"uat_host": "rm-wz95gn5v6sxl4iq5uqo.mysql.rds.aliyuncs.com",
+			"uat_port": "3306",
+			"uat_user": "perfectmall",
+			"uat_passwd": "lige@2020",
+			"base_url": "http://uc2-uat.perfect99.com",
+			"username": "hewei1987",
+			"password": "888888",
+            "access_token": "ea0a2895-b7de-4636-933a-64027dcba1dc",
+            "token_type": "bearer",
+            "account_01": "6226090000000048",
+            "accountBank_01": "招商银行",
+            "accountName_01 ": "张三 ",
+            "branch_01 ": "招商银行广州琶洲支行 ",
+            "cardNo ": "3000003173 ",
+            "cardNo_01 ": "12664865 ",
+            "cardNo_02 ": "3000003181 ",
+            "cardNo_03 ": "3000003180 ",
+            "certificatesNo_00 ": "412828197207120174 ",
+            "certificatesNo_01 ": "440825199001011275 ",
+            "certificatesNo_02 ": "18928790008 "
+        },
+        "PWD ": "D: \\git_ligeit\\ test_ucong ",
+        "functions ": {
+            "hw_get_verifycode ": " < function hw_get_verifycode at 0x0000019178EA5D30 > ",
+            "str_replace ": " < function str_replace at 0x0000019179B3CC10 > ",
+            "hw_login_rsakey ": " < function hw_login_rsakey at 0x0000019179B3CCA0 > "
+        },
+        "test_path ": "D: \\git_ligeit\\ test_ucong\\ testsuites\\ 服务中心管理\\ 添加服务中心主路径用例集.yml "
+    },
+    "testsuites ": [
+		 {
+			 "config ": {"name ": "添加服务中心用例集 "},
+			 "testcases ": {
+				"添加服务中心： 云商新增服务中心总店主路径检查 ": {
+					  "name ": "添加服务中心： 云商新增服务中心总店主路径检查 ",
+					  "testcase ": "testcases /服务中心管理 / 服务中心列表查询 / 添加服务中心： 云商新增服务中心总店主路径检查.yml ",
+					  "testcase_def ": {
+						   "config ": {"name ": "添加服务中心： 云商新增服务中心总店主路径检查 "},
+						   "teststeps ": [
+								{
+									 "name ": "添加服务中心：云商新增服务中心总店主路径检查 ",
+									 "testcase ": "testcases / 服务中心管理 / 服务中心列表查询 / 基础服务： 云商新增服务中心总店.yml ",
+									 "extract ": [
+										  "access_token ",
+										  "token_type ",
+										  "code ",
+										  "name ",
+										  "cardNo ",
+										  "realname ",
+										  "provinceName ",
+										  "companyname "
+									 ],
+									 "variables ": {
+										  "cardNo ": "$ {ENV(cardNo)}"
+									 },
+									 "testcase_def ": {
+										  "config ": {
+											   "name ": "基础服务： 云商新增服务中心总店 ",
+											   "output ": [
+													"access_token ",
+													"token_type ",
+													"code ",
+													"name ",
+													"realcardNo ",
+													"realname ",
+													"provinceName ",
+													"companyname ",
+													"companyCode "
+											   ]
+										  },
+										  "teststeps ": [
+											   {
+													"name ": "前提条件： 登录完美运营后台 ",
+													"api ": "api / 架构基础服务 / 完美运营后台登陆.yml ",
+													"extract ": [
+														 {"access_token ": "content.data.access_token "},
+														 {"token_type ": "content.data.token_type "},
+														 {"nickname ": "content.data.nickname "}
+													],
+													"api_def ": {
+														 "name ": " / login ",
+														 "request ": {
+															  "method ": "POST ",
+															  "headers ": {"Authorization ": "Basic b3BfYXBwOnBlcmZlY3RfcG9ydGFs "},
+															  "data ": {"key ": "$ {key}", "data ": "$ {data}"},
+															  "url ": "$ {base_url}/login"
+														 },
+														 "variables": {
+															  "base_url": "${ENV(base_url)}",
+															  "key": "${hw_login_rsakey($username, $password, 1, $channel)}",
+															  "data ": "$ {hw_login_rsakey($username, $password, 0, $channel)}",
+															  "username ": "hewei1987 ",
+															  "password ": "888888 ",
+															  "channel ": "op "
+														 },
+														 "validate ": [
+															  {"eq ": ["status_code ", 200]},
+															  {"eq ": ["content.code ", 200]}
+														 ]
+													}
+											   },
+											   {
+													"name": "前提条件：根据负责人卡号获取负责人信息",
+													"api": "api/会员管理/getMasterMemberInfoByCardNo.yml",
+													"extract": [
+														 {"addMemberLeaderAo": "content.data"},
+														 {"id": "content.data.id"},
+														 {"memberNo": "content.data.memberNo "},
+														 {"realcardNo ": "content.data.cardNo "},
+														 {"realname ": "content.data.realname "},
+														 {"companyCode ": "content.data.companyCode "},
+														 {"companyId ": "content.data.companyId "},
+														 {"certificatesNo ":"content.data.certificatesNo"},
+														 {"certificatesType": "content.data.certificatesType"},
+														 {"memberType": "content.data.memberType"},
+														 {"mobile": "content.data.mobile"}
+													],
+													"variables": {
+														 "cardNo": "${ENV(cardNo)}",
+														 "access_token": "${access_token}",
+														 "token_type": "${token_type}"
+													},
+													"api_def": {
+														"name": "/mgmt/store/getMasterMemberInfoByCardNo",
+														"request": {
+															"params": {
+																"cardNo": "${cardNo}"
+															},
+															"method": "GET",
+															"headers": {
+																"Authorization": "${token_type} ${access_token}",
+																"channel": "${channel}"
+															},
+															"url": "${base_url}/mgmt/store/getMasterMemberInfoByCardNo"
+														},
+														"validate": [
+															 {"eq": ["status_code", 200]},
+															 {"eq": ["content.code", 200]}
+														],
+														"variables": {
+															"cardNo": "${ENV(cardNo)}",
+															"channel": "pc",
+															"access_token": "${ENV(access_token)}",
+															"token_type": "${ENV(token_type)}",
+															"base_url": "${ENV(base_url)}"
+														}
+													}
+												},
+											   {
+												   "name": "前提条件：校验证件号唯一性 ",
+												   "api ": "api / 服务中心管理 / 服务中心列表查询 / 校验证件号唯一性.yml ",
+												   "variables ": {
+													   "certificatesNo ": "$ {certificatesNo}",
+													   "access_token ": "$ {access_token}",
+													   "token_type ": "$ {token_type}"
+												   },
+												   "api_def ": {
+													   "name ": " / mgmt / store / checkStoreCertificatesNoIsExist ",
+													   "request ": {
+														   "headers ": {"Authorization ": "$ {token_type}$ {access_token}"},
+														   "method ": "GET ",
+														   "params ": {"certificatesNo ": "$ {certificatesNo}"},
+														   "url ": "$ {base_url}/mgmt/store / checkStoreCertificatesNoIsExist "
+													   },
+													   "validate ": [
+														   {"eq ": ["status_code ", 200]},
+														   {"eq ": ["content.code ", 200]}
+													   ],
+													   "variables ": {
+														   "certificatesNo ": 440825199001010001,
+														   "access_token ": "$ {ENV(access_token)}",
+														   "token_type ": "$ {ENV(token_type)}",
+														   "base_url ": "$ {ENV(base_url)}"
+													   }
+												   }
+											   },
+											   {
+												   "name ": "前提条件： 检查服务中心名称是否重复 ",
+												   "api ": "api / 服务中心管理 / 服务中心列表查询 / 检查服务中心名称是否重复.yml ",
+												   "variables ": {
+													   "memberType ": "$ {memberType}",
+													   "storeName ": "$ {realname}的总店 ",
+													   "access_token ": "$ {access_token}",
+													   "token_type ": "$ {token_type}"
+												   },
+												   "api_def ": {
+													   "name ": " / mgmt / store / checkStoreNameIsExist ",
+													   "request ": {
+														   "headers ": {"Authorization ": "$ {token_type}$ {access_token}"},
+														   "method ": "GET ",
+														   "params ": {"memberType ": "$ {memberType}", "storeName ": "$ {storeName}"},
+														   "url ": "$ {base_url}/mgmt/store / checkStoreNameIsExist "
+													   },
+													   "validate ": [
+														   {"eq ": ["status_code ", 200]},
+														   {"eq ": ["content.code ", 200]}
+													   ],
+													   "variables ": {
+														   "memberType ": 3,
+														   "storeName ": "何伟零号的总店 ",
+														   "access_token ": "$ {ENV(access_token)}",
+														   "token_type ": "$ {ENV(token_type)}",
+														   "base_url ": "$ {ENV(base_url)}"
+													   }
+												   }
+											   },
+											   {
+												   "name ": "前提条件： 获取省份信息 ",
+												   "api ": "api / 基础信息管理 / 地区信息管理 / 获取省份信息.yml ",
+												   "variables ": {
+													   "access_token ": "$ {access_token}",
+													   "token_type ": "$ {token_type}"
+												   },
+												   "extract ": [
+													   {"provinceCode ": "content.data .20.code "},
+													   {"provinceId ": "content.data .20.provinceId "},
+													   {"provinceName ": "content.data .20.provinceName "}
+												   ],
+												   "api_def ": {
+													   "name ": " / mgmt /sys / getProvinceList ",
+													   "request ": {
+														   "method ": "GET ",
+														   "headers ": {"Authorization ": "$ {token_type}$ {access_token}"},
+														   "url ": "$ {base_url}/mgmt/sys / getProvinceList "
+													   },
+													   "validate ": [
+														   {"eq ": ["status_code ", 200]},
+														   {"eq": ["content.code", 200]}
+													   ],
+													   "variables": {
+														   "access_token": "${ENV(access_token)}",
+														   "token_type": "${ENV(token_type)}",
+														   "base_url": "${ENV(base_url)}"
+													   }
+												   }
+											   },
+											   {
+												   "name": "前提条件：根据省份编码获取下属城市",
+												   "api ": "api / 基础信息管理 / 地区信息管理 / 根据省份编码获取下属城市.yml ",
+												   "variables ": {
+													   "provinceCode ": "$ {provinceCode}",
+													   "access_token ": "$ {access_token}",
+													   "token_type ": "$ {token_type}"
+												   },
+												   "extract ": [
+													   {"cityCode ": "content.data.0.cityCode"},
+													   {"cityName": "content.data.0.cityName"}
+												   ],
+												   "api_def": {
+													   "name": "/mgmt/sys/listCityAndDistrict",
+													   "request": {
+														   "method": "GET",
+														   "params": {"provinceCode": "${provinceCode}"},
+														   "headers ": {"Authorization ": "$ {token_type}$ {access_token}"},
+														   "url ": "$ {base_url}/mgmt/sys / listCityAndDistrict "
+													   },
+													   "validate ": [
+														   {"eq ": ["status_code ", 200]},
+														   {"eq ": ["content.code ", 200]}
+													   ],
+													   "variables ": {
+														   "provinceCode ": 440000000000,
+														   "access_token ": "$ {ENV(access_token)}",
+														   "token_type ": "$ {ENV(token_type)}",
+														   "base_url ": "$ {ENV(base_url)}"
+													   }
+												   }
+											   },
+											   {
+												   "name ": "前提条件： 根据城市编码获取下属地区 ",
+												   "api ": "api / 基础信息管理 /地区信息管理 / 根据城市编码获取下属地区.yml ",
+												   "variables ": {
+													   "cityCode ": "$ {cityCode}",
+													   "access_token ": "$ {access_token}",
+													   "token_type ": "$ {token_type}"
+												   },
+												   "extract ": [
+													   {"districtCode ": "content.data .0.districtCode "},
+													   {"districtName ": "content.data .0.districtName "}
+												   ],
+												   "api_def ": {
+													   "name ": " / mgmt / sys / getRegionListByCity ",
+													   "request ": {
+														   "method ": "GET ",
+														   "params ": {
+															   "cityCode ": "$ {cityCode}"
+														   },
+														   "headers ": {"Authorization ":"${token_type} ${access_token}"},
+														   "url": "${base_url}/mgmt/sys/getRegionListByCity"
+													   },
+													   "validate": [
+														   {"eq": ["status_code", 200]},
+														   {"eq": ["content.code", 200]}
+													   ],
+													   "variables": {
+														   "cityCode": 440100000000,
+														   "access_token ": "$ {ENV(access_token)}",
+														   "token_type ": "$ {ENV(token_type)}",
+														   "base_url ": "$ {ENV(base_url)}"
+													   }
+												   }
+											   },
+											   {
+												   "name ": "前提条件： 根据城市地区编码获取下属街道 ",
+												   "api ": "api / 基础信息管理 / 地区信息管理 / 根据城市地区编码获取下属街道.yml ",
+												   "variables ": {
+													   "districtCode ": "$ {districtCode}",
+													   "access_token ": "$ {access_token}",
+													   "token_type ": "$ {token_type}"
+												   },
+												   "extract ": [
+													   {"streetCode ": "content.data .0.streetCode "},
+													   {"streetName ": "content.data .0.streetName "}
+												   ],
+												   "api_def ": {
+													   "name ": " / mgmt / sys / getStreetListByDistrictCode ",
+													   "request ": {
+														   "method ": "GET ",
+														   "params ": {"districtCode ": "$ {districtCode}"},
+														   "headers ": {"Authorization ": "$ {token_type}$ {access_token}"},
+														   "url ": "$ {base_url}/mgmt/sys / getStreetListByDistrictCode "
+													   },
+													   "validate ": [
+														   {"eq ": ["status_code ", 200]},
+														   {"eq ": ["content.code ", 200]}
+													   ],
+													   "variables ": {
+														   "districtCode ": 440105000000,
+														   "access_token": "${ENV(access_token)}",
+														   "token_type": "${ENV(token_type)}",
+														   "base_url": "${ENV(base_url)}"
+													   }
+												   }
+											   },
+											   {
+												   "name": "前提条件：查询所在地是否存在可用仓库",
+												   "api": "api/服务中心管理/服务中心列表查询 /查询所在地是否存在可用仓库.yml ",
+												   "variables ": {
+													   "provinceCode ": "$ {provinceCode}",
+													   "access_token ": "$ {access_token}",
+													   "token_type ": "$ {token_type}"},
+												   "api_def ": {
+													   "name ": " / mgmt / sys / checkWareByProvinceCode ",
+													   "request": {
+														   "headers": {"Authorization": "${token_type} ${access_token}"},
+														   "method": "GET",
+														   "params": {"provinceCode": "${provinceCode}"},
+														   "url": "${base_url}/mgmt/sys/checkWareByProvinceCode"},
+													   "validate": [
+														   {"eq": ["status_code", 200]},
+														   {"eq": ["content.data", true]}
+													   ],
+													   "variables": {
+														   "provinceCode": 440000000000,
+														   "access_token": "${ENV(access_token)}",
+														   "token_type": "${ENV(token_type)}",
+														   "base_url": "${ENV(base_url)}"
+													   }
+												   }
+											   },
+											   {
+												   "name ": "前提条件： 检查经营地址是否重复 ",
+												   "api ": "api / 服务中心管理 / 服务中心列表查询 / 检查经营地址是否重复.yml ",
+												   "variables ": {
+													   "provinceName ": "$ {provinceCode}",
+													   "cityName ": "$ {cityName}",
+													   "areaName ": "$ {districtCode}",
+													   "streetName ": "$ {streetCode}",
+													   "detailAddress ": "海口市秀英区秀英街道南海大道21号自编$ {hw_time()}号 ",
+													   "access_token ": "$ {access_token}",
+													   "token_type ": "$ {token_type}"},
+												   "api_def ": {
+													   "name": "/mgmt/store/checkBusinessAddressIsExist",
+													   "request": {
+														   "headers": {"Authorization": "${token_type} ${access_token}"},
+														   "method": "GET",
+														   "params": {
+															   "provinceName": "${provinceName}",
+															   "cityName": "$ {cityName}",
+															   "areaName ": "$ {areaName}",
+															   "streetName ": "$ {streetName}",
+															   "detailAddress ": "$ {detailAddress}"},
+														   "url ": "$ {base_url}/mgmt/store / checkBusinessAddressIsExist "
+													   },
+													   "validate ": [
+														   {"eq ": ["status_code ",200]}
+													   ],
+													   "variables": {
+														   "provinceName": "广东省",
+														   "cityName": "广州市",
+														   "areaName": "海珠区",
+														   "streetName": "南州街道",
+														   "detailAddress": "广州市海珠区南洲街道新滘中路88号唯品同创汇6区东三街17号自编23号",
+														   "access_token ": "$ {ENV(access_token)}",
+														   "token_type ": "$ {ENV(token_type)}",
+														   "base_url ": "$ {ENV(base_url)}"
+													   }
+												   }
+											   },
+											   {
+												   "name ": "前提条件： 上传负责人身份证正面照片 ",
+												   "api ": "api / 架构基础服务 / 上传文件接口.yml ",
+												   "extract ": [
+													   {"fileUrlKey_01 ": "content.datas.fileUrlKey "},
+													   {"storagePlace_01 ": "content.datas.storagePlace "}
+												   ],
+												   "variables ": {
+													   "image ": "data / 服务中心管理 / 图片 / 负责人身份证正面.png ",
+													   "access_token ": "$ {access_token}",
+													   "token_type ": "$ {token_type}"
+												   },
+												   "api_def ": {
+													   "name ": " / storage / upload ",
+													   "request ": {
+														   "headers ": {"Authorization ": "$ {token_type}$ {access_token}"},
+														   "method ": "POST ",
+														   "upload ": {
+															   "file ": "$image ",
+															   "storageType ": "PrivateCloud ",
+															   "clientKey ": "mall - center - store "
+														   },
+														   "url ": "$ {base_url}/storage/upload"
+													   },
+													   "extract ": {
+														   "fileUrlKey ": "content.datas.fileUrlKey ",
+														   "storagePlace ": "content.datas.storagePlace "
+													   },
+													   "validate ": [
+														   {"eq": ["status_code", 200]},
+														   {"eq": ["content.datas.result", "1"]},
+														   {"eq": ["content.datas.msg", "文件上传成功"]}
+													   ],
+													   "variables": {
+														   "image": "data/服务中心管理/图片/负责人身份证正面.png",
+														   "storageType": "PublicCloud ",
+														   "clientKey ": "mall - center - store ",
+														   "access_token ": "$ {ENV(access_token)}",
+														   "token_type ": "$ {ENV(token_type)}",
+														   "base_url ": "$ {ENV(base_url)}"
+													   }
+												   }
+											   },
+											   {
+												   "name ": "前提条件： 上传负责人身份证反面照片 ",
+												   "api ": "api / 架构基础服务 / 上传文件接口.yml ",
+												   "extract ": [
+													   {"fileUrlKey_02 ": "content.datas.fileUrlKey "},
+													   {"storagePlace_02 ": "content.datas.storagePlace "}
+												   ],
+												   "variables ": {
+													   "image ": "data / 服务中心管理 / 图片 / 负责人身份证反面.png ",
+													   "access_token ": "$ {access_token}",
+													   "token_type ": "$ {token_type}"
+												   },
+												   "api_def ": {
+													   "name ": " / storage / upload ",
+													   "request ": {
+														   "headers ": {"Authorization ": "$ {token_type}$ {access_token}"},
+														   "method ": "POST ",
+														   "upload ": {
+															   "file ": "$image ",
+															   "storageType ": "PrivateCloud ",
+															   "clientKey ": "mall - center - store "
+														   },
+														   "url ": "$ {base_url}/storage/upload"
+													   },
+													   "extract ": {
+														   "fileUrlKey ": "content.datas.fileUrlKey ",
+														   "storagePlace ": "content.datas.storagePlace "
+													   },
+													   "validate ": [
+														   {"eq ": ["status_code ", 200]},
+														   {"eq ": ["content.datas.result ", "1 "]},
+														   {"eq ": ["content.datas.msg ", "文件上传成功 "]}
+													   ],
+													   "variables ": {
+														   "image ": "data / 服务中心管理 / 图片 / 负责人身份证正面.png ",
+														   "storageType ": "PublicCloud ",
+														   "clientKey ": "mall - center - store ",
+														   "access_token ": "$ {ENV(access_token)}",
+														   "token_type ": "$ {ENV(token_type)}",
+														   "base_url ": "$ {ENV(base_url)}"
+													   }
+												   }
+											   },
+											   {
+												   "name": "前提条件：上传负责人配偶身份证正面照片",
+												   "api": "api/架构基础服务/上传文件接口.yml",
+												   "extract": [
+													   {"fileUrlKey_03": "content.datas.fileUrlKey"},
+													   {"storagePlace_03": "content.datas.storagePlace"}
+												   ],
+												   "variables": {
+													   "image": "data/服务中心管理/图片/配偶身份证正面.jpg",
+													   "access_token": "${access_token}","token_type": "${token_type}"
+												   },
+												   "api_def": {
+													   "name": "/storage/upload",
+													   "request": {
+														   "headers": {"Authorization ": "$ {token_type}$ {access_token}"},
+														   "method ": "POST ",
+														   "upload ": {
+															   "file ": "$image ",
+															   "storageType ": "PrivateCloud ",
+															   "clientKey ": "mall - center - store "
+														   },
+														   "url ": "$ {base_url}/storage/upload"
+													   },
+													   "extract ": {
+														   "fileUrlKey ": "content.datas.fileUrlKey ",
+														   "storagePlace ": "content.datas.storagePlace "
+													   },
+													   "validate ": [
+														   {"eq ": ["status_code ", 200]},
+														   {"eq ": ["content.datas.result ", "1 "]},
+														   {"eq ": ["content.datas.msg ", "文件上传成功 "]}
+													   ],
+													   "variables ": {
+														   "image ": "data / 服务中心管理 / 图片 / 负责人身份证正面.png ",
+														   "storageType ": "PublicCloud ",
+														   "clientKey ": "mall - center - store ",
+														   "access_token ": "$ {ENV(access_token)}",
+														   "token_type ":"${ENV(token_type)}",
+														   "base_url": "${ENV(base_url)}"
+													   }
+												   }
+											   },
+											   {
+												   "name": "前提条件：上传负责人配偶身份证反面照片",
+												   "api": "api/架构基础服务/上传文件接口.yml",
+												   "extract": [
+													   {"fileUrlKey_04": "content.datas.fileUrlKey "},
+													   {"storagePlace_04 ": "content.datas.storagePlace "}
+												   ],
+												   "variables ": {
+													   "image ": "data / 服务中心管理 / 图片 / 配偶身份证反面.jpg ",
+													   "access_token ": "$ {access_token}",
+													   "token_type ": "$ {token_type}"
+												   },
+												   "api_def ": {
+													   "name ": " / storage / upload ",
+													   "request ": {
+														   "headers ": {"Authorization ": "$ {token_type}$ {access_token}"},
+														   "method ": "POST ",
+														   "upload ": {
+															   "file ": "$image ",
+															   "storageType ": "PrivateCloud ",
+															   "clientKey ": "mall - center - store "
+														   },
+														   "url ": "$ {base_url}/storage/upload"
+													   },
+													   "extract ": {
+														   "fileUrlKey ": "content.datas.fileUrlKey ",
+														   "storagePlace ": "content.datas.storagePlace "
+													   },
+													   "validate ": [
+														   {"eq ": ["status_code ", 200]},
+														   {"eq ": ["content.datas.result ", "1 "]},
+														   {"eq ": ["content.datas.msg ", "文件上传成功 "]}
+													   ],
+													   "variables ": {
+														   "image ": "data / 服务中心管理 / 图片 / 负责人身份证正面.png ",
+														   "storageType ": "PublicCloud ",
+														   "clientKey ": "mall - center - store ",
+														   "access_token ": "$ {ENV(access_token)}",
+														   "token_type ": "$ {ENV(token_type)}",
+														   "base_url ": "$ {ENV(base_url)}"
+													   }
+												   }
+											   },
+											   {
+												   "name ": "前提条件： 上传收讫章 ",
+												   "api ": "api / 架构基础服务 / 上传文件接口.yml ",
+												   "extract ": [
+													   {"fileUrlKey_05 ": "content.datas.fileUrlKey "},
+													   {"storagePlace_05 ": "content.datas.storagePlace "}
+												   ],
+												   "variables ": {
+													   "image ": "data / 服务中心管理 / 图片 / 收讫章.jpg ",
+													   "access_token ": "$ {access_token}",
+													   "token_type ": "$ {token_type}"},
+												   "api_def ": {
+													   "name ": " / storage / upload ",
+													   "request ": {
+														   "headers ": {"Authorization ": "$ {token_type}$ {access_token}"},
+														   "method ": "POST ",
+														   "upload ": {
+															   "file ": "$image ",
+															   "storageType ": "PrivateCloud ",
+															   "clientKey ": "mall - center - store "},
+														   "url ": "$ {base_url}/storage/upload"
+													   },
+													   "extract ": {
+														   "fileUrlKey ": "content.datas.fileUrlKey ",
+														   "storagePlace ": "content.datas.storagePlace "
+													   },
+													   "validate ": [
+														   {"eq ": ["status_code ",200]},
+														   {"eq": ["content.datas.result", "1"]},
+														   {"eq": ["content.datas.msg", "文件上传成功"]}
+													   ],
+													   "variables": {
+														   "image": "data/服务中心管理/图片/负责人身份证正面.png",
+														   "storageType": "PublicCloud",
+														   "clientKey": "mall - center - store ",
+														   "access_token ": "$ {ENV(access_token)}",
+														   "token_type ": "$ {ENV(token_type)}",
+														   "base_url ": "$ {ENV(base_url)}"
+													   }
+												   }
+											   },
+											   {
+												   "name ": "前提条件： 根据分公司编号返回分公司名称 ",
+												   "api ": "api / 基础信息管理 / 分公司资料管理 / 公司资料查询展示.yml ",
+												   "extract ": [
+													   {"companyname ": "content.data.list .0.fullName "}
+												   ],
+												   "variables ": {
+													   "companyCode ": "$ {companyCode}",
+													   "access_token ": "$ {access_token}",
+													   "token_type ": "$ {token_type}"
+												   },
+												   "api_def ": {
+													   "name ": " / mgmt / sys / getComByCodeOrPri ",
+													   "request ": {
+														   "method ": "GET ",
+														   "params ": {
+															   "companyCode ": "$ {companyCode}",
+															   "pageNum ": "$ {pageNum}",
+															   "pageSize ": "$ {pageSize}",
+															   "principal ": "$ {principal}"
+														   },
+														   "headers ": {"Authorization ": "$ {token_type}$ {access_token}"},
+														   "url ": "$ {base_url}/mgmt/sys / getComByCodeOrPri "
+													   },
+													   "validate ": [
+														   {"eq ": ["status_code ", 200]},
+														   {"eq ": ["content.code ", 200]}
+													   ],
+													   "variables ": {
+														   "companyCode ": "02000 ",
+														   "pageNum ": 1,
+														   "pageSize ": 10,
+														   "principal ": null,
+														   "access_token ": "$ {ENV(access_token)}",
+														   "token_type ": "$ {ENV(token_type)}",
+														   "base_url ": "$ {ENV(base_url)}"
+													   }
+												   }
+											   },
+											   {
+												   "name ": "基础服务： 云商添加服务中心总店 ",
+												   "api ": "api / 服务中心管理 / 服务中心列表查询 / 添加服务中心.yml ",
+												   "variables ": {
+													   "access_token ": "$ {access_token}",
+													   "token_type ": "$ {token_type}",
+													   "addMemberLeaderAo ": "$ {addMemberLeaderAo}",
+													   "companyCode ": "$ {companyCode}",
+													   "isMainShop ": 1,
+													   "leaderNo ": "$ {realcardNo}",
+													   "name ": "$ {realname}的总店 ",
+													   "openDate ": "2021 - 12 - 23 T16: 00: 00.000 Z ",
+													   "permission ": "1, 2, 3, 4, 5 ",
+													   "ratifyDate ": "2020 -12 - 22 T16: 00: 00.000 Z ",
+													   "zipCode ": "540000 ",
+													   "deliveryInfo ": " {'person': '${realname}', 'phoneNum': '${mobile}', 'address': '海口市秀英区秀英街道南海大道21号自编${hw_time()}号', 'receiptSeal': '${fileUrlKey_05}', 'detailAddress ':'海口市秀英区秀英街道南海大道21号自编$ {hw_time()}号 ','deliveryProvinceName ':'$ {provinceName}','deliveryProvinceCode ':'$ {provinceCode}','deliveryCityName ':'$ {cityName}','deliveryCityCode ':'$ {cityCode}','deliveryAreaName ':'$ {districtName}','deliveryAreaCode ':'$ {districtCode}','deliveryStreetName ':'','deliveryStreetCode ':'','planMoveAddress ':'没有要搬迁的地方哦 '}",
+													   "extraInfo": "{'subShopName ':'','unContactReason ':'还没人让我签 ','phone1 ':'02000000000 ','email1 ':'','phone2 ':'02000000001 ','email2 ':'','legalPerson ':'何伟零号 ','legalInfo ':'440825199001014337 ','originalStore ':'','guaranteeName1 ':'梁玉莲 ','guaranteeCard1 ':'00001118 ','guaranteeCenter1 ':'902012 ','isTransProvincial ':0,'guaranteeCard2 ':'00169759 ','guaranteeName2 ':'田金妮 ','guaranteeCenter2 ':'902016 ','cancelTime ':'','frozenTime ':'','frozenReason ':''}',",
+													   "shopType": 1,
+													   "isServiceShop": 1,
+													   "isSignContract": 2,
+													   "provinceCode": "${provinceCode}",
+													   "provinceName": "${provinceName}",
+													   "cityCode": "${cityCode}",
+													   "cityName": "${cityName}",
+													   "areaCode": "${districtCode}",
+													   "areaName ": "$ {districtName}",
+													   "streetCode ": "",
+													   "streetName ": "",
+													   "receiveGoodsSite ": [
+														   "$ {provinceCode}",
+														   "$ {cityCode}",
+														   "$ {districtCode}",
+														   ""
+													   ],
+													   "level ": 1,
+													   "companyName ": "$ {companyname}",
+													   "email ": "$ {realcardNo}",
+													   "phone ": "$ {mobile}"
+												   },
+												   "api_def ": {
+													   "name ": " / mgmt / store / addStore ",
+													   "request ": {
+														   "method ": "POST ",
+														   "headers ": {"Authorization ": "$ {token_type}$ {access_token}"},
+														   "json ": {
+															   "addMemberLeaderAo ": "$ {addMemberLeaderAo}",
+															   "credentialVO1 ": "$ {credentialVO1}",
+															   "credentialVO2 ": "$ {credentialVO2}",
+															   "credentialVO3 ": "$ {credentialVO3}",
+															   "storeVO ": {
+																   "city ": "$ {city}",
+																   "code ": "$ {code}",
+																   "addressInfo ": "$ {addressInfo}",
+																   "areaCode ": "$ {areaCode}",
+																   "areaName ": "$ {areaName}",
+																   "cityCode ": "$ {cityCode}",
+																   "cityName ": "$ {cityName}",
+																   "companyCode ": "$ {companyCode}",
+																   "decorationInfo ": "$ {decorationInfo}",
+																   "deliveryInfo ": "$ {deliveryInfo}",
+																   "email ": "$ {email}",
+																   "extraInfo ": "$ {extraInfo}",
+																   "fax ": "$ {fax}",
+																   "isMainShop ": "$ {isMainShop}",
+																   "isServiceShop ": "$ {isServiceShop}",
+																   "isSignContract ": "$ {isSignContract}",
+																   "leaderNo ": "$ {leaderNo}",
+																   "level ": "$ {level}",
+																   "name ": "$ {name}",
+																   "openDate ": "$ {openDate}",
+																   "permission ": "$ {permission}",
+																   "phone ": "$ {phone}",
+																   "province ": "$ {province}",
+																   "provinceCode ": "$ {provinceCode}",
+																   "provinceName ": "$ {provinceName}",
+																   "ratifyDate ": "$ {ratifyDate}",
+																   "receiveGoodsSite ": "$ {receiveGoodsSite}",
+																   "remarks ": "$ {remarks}",
+																   "shopStatus ": "$ {shopStatus}",
+																   "shopType ": "$ {shopType}",
+																   "shopkeeperNo ": "$ {shopkeeperNo}",
+																   "shopkeeperName ": "$ {shopkeeperName}",
+																   "storeId ": "$ {storeId}",
+																   "streetCode ": "$ {streetCode}",
+																   "streetName ": "$ {streetName}",
+																   "zipCode ": "$ {zipCode}"
+															   }
+														   },
+														   "url ": "$ {base_url}/mgmt/store / addStore "
+													   },
+													   "variables ": {
+														   "addMemberLeaderAo ": "$ {addMemberLeaderAo}",
+														   "city ": "",
+														   "code ": "",
+														   "companyCode ": 34000,
+														   "isMainShop ": 1,
+														   "leaderNo ": "3000001181 ",
+														   "name ": "何伟一号总店 ",
+														   "openDate ": "2021 - 12 - 23 T16: 00: 00.000 Z ",
+														   "permission ": "1, 2, 3, 4, 5 ",
+														   "province ": "",
+														   "ratifyDate ": "2020 - 12 - 22 T16: 00: 00.000 Z ",
+														   "remarks ": "何伟建的总店 ",
+														   "shopStatus ": null,
+														   "shopkeeperNo ": null,
+														   "shopkeeperName ": null,
+														   "storeId ": null,
+														   "zipCode": "510000",
+														   "decorationInfo": "{'totalArea ':'','businessArea ':'','leaseTerm ':'','monthlyRent ':'','shopLength ':'','businessFloorHeight ':'','shopWidth ':'','signLength ':'','signWidth ':'','propertyType ':'','isSign ':'','isLed ':''}', ",
+														   "deliveryInfo": "{'person ':'何伟零号 ','phoneNum ':'18928790001 ','address ':'中山市石岐区孙文东路0号 ','receiptSeal ':'','detailAddress ':'中山市石岐区孙文东路0号 ','deliveryProvinceName ':'广东省 ','deliveryProvinceCode ':'440000000000 ','deliveryCityName ':'中山市 ','deliveryCityCode ':'442000000000 ','deliveryAreaName ':'石岐区街道办事处 ','deliveryAreaCode ':'442000001000 ','deliveryStreetName ':'','deliveryStreetCode ':'','planMoveAddress ':'没有要搬迁的地方哦 '}",
+														   "addressInfo": "{'detailAddress ':'','contactAddress ':''}",
+														   "extraInfo": "{'subShopName ':'','unContactReason ':'还没人让我签 ','phone1 ':'02000000000', 'email1': '', 'phone2': '02000000001', 'email2': '', 'legalPerson': '何伟零号', 'legalInfo': '440825199001014337', 'originalStore': '', 'guaranteeName1': '梁玉莲', 'guaranteeCard1': '00001118', 'guaranteeCenter1 ':'902012 ','isTransProvincial ':0,'guaranteeCard2 ':'00169759 ','guaranteeName2 ':'田金妮 ','guaranteeCenter2 ':'902016 ','cancelTime ':'','frozenTime ':'','frozenReason ':''}",
+														   "shopType": 1,
+														   "isServiceShop": 1,
+														   "isSignContract": 2,
+														   "email": "hewei_01",
+														   "phone": "18928790001",
+														   "fax": "020-10000001-123",
+														   "provinceCode": "440000000000",
+														   "provinceName": "广东省",
+														   "cityCode": "440100000000",
+														   "cityName": "广州市",
+														   "areaCode ": "440105000000 ",
+														   "areaName ": "海珠区 ",
+														   "streetCode ": "440105015000 ",
+														   "streetName ": "琶洲街道 ",
+														   "receiveGoodsSite ": [
+															   "440000000000 ",
+															   "440100000000 ",
+															   "440105000000 ",
+															   "440105015000 "
+														   ],
+														   "level ": 1,
+														   "companyName ": "广东分公司 ",
+														   "credentialVO1 ": {
+															   "certificateDate ": null,
+															   "credentialType ": null,
+															   "expiryDate ": null,
+															   "picUrls ": null,
+															   "storeCode ": null,
+															   "info ": " {'certificateName': '', 'certificateCode': '', 'certificatePerson ':'','isFive ':'','operatorName ':'','operatorType ':'','socialCreditCode ':'','composition ':'','identificationCode ':'','certificationAuthority ':'','businessPlace ':'','isSale ':'','businessScope ':''}"
+														   },
+														   "credentialVO2": {
+															   "certificateDate": null,
+															   "credentialType": null,
+															   "expiryDate": null,
+															   "info": "{'picUrls ':'','storeCode ':'','code ':'','certificationAuthority ':'','businessScope ':''}"
+														   },
+														   "credentialVO3": {
+															   "certificateDate ": null,
+															   "credentialType ": null,
+															   "expiryDate ": null,
+															   "info ": " {'picUrls': '', 'storeCode': '', 'isFoodBusinessLicense': '', 'licenseKey': '', 'certificationAuthority': '', 'businessScope': ''}"
+														   },
+														   "access_token ": "$ {ENV(access_token)}",
+														   "token_type ": "$ {ENV(token_type)}",
+														   "base_url ": "$ {ENV(base_url)}"
+													   },
+													   "validate ": [
+														   {"eq ": ["status_code ", 200]},
+														   {"eq ": ["content.code ", 200]}
+													   ]
+												   }
+											   },
+											   {
+												   "name ": "获取服务中心列表： 获取服务中心编号， 名称， 负责人卡号， 姓名， 所在城市， 所属分公司， 网点类型 ",
+												   "api ": "api / 服务中心管理 / 服务中心列表查询 / 获取服务中心列表.yml ",
+												   "extract ": [
+													   {"name ": "content.data.list. - 1. name "},
+													   {"code ": "content.data.list. - 1. code "}
+												   ],
+												   "variables ": {
+													   "name ": "$ {realname}的总店 ",
+													   "address ": null,
+													   "leaderCardNo ": "$ {realcardNo}",
+													   "companyCode ": "$ {companyCode}",
+													   "access_token ": "$ {access_token}",
+													   "token_type ": "$ {token_type}"},
+												   "validate ": [
+													   {"eq ": ["content.data.list. - 1. name ", "$ {realname}的总店 "]},
+													   {"eq ": ["content.data.list. - 1. leaderCardNo ", "$ {realcardNo}"]},
+													   {"eq ": ["content.data.list. - 1. leaderName ", "$ {realname}"]},
+													   {"eq ": ["content.data.list. - 1. shopkeeperNo ", "$ {realcardNo}"]},
+													   {"eq ": ["content.data.list. - 1. shopkeeperName ", "$ {realname}"]},
+													   {"eq ": ["content.data.list. - 1. provinceName ", "$ {provinceName}"]},
+													   {"eq ": ["content.data.list.-1.companyName", "${companyname}"]},
+													   {"eq": ["content.data.list.-1.companyCode", "${companyCode}"]},
+													   {"eq": ["content.data.list.-1.shopType", 1]}
+												   ],
+												   "api_def": {
+													   "name": "/mgmt/store/listStore ",
+													   "request ": {
+														   "headers ": {"Authorization ": "$ {token_type}$ {access_token}"},
+														   "method ": "GET ",
+														   "params ": {
+															   "storeCode ": "$ {storeCode}",
+															   "name ": "$ {name}",
+															   "leaderCardNo ": "$ {leaderCardNo}",
+															   "address ": "$ {address}",
+															   "leaderName ": "$ {leaderName}",
+															   "shopType ": "$ {shopType}",
+															   "shopkeeperName ": "$ {shopkeeperName}",
+															   "shopkeeperNo ": "$ {shopkeeperNo}",
+															   "isMainShop ": "$ {isMainShop}",
+															   "level ": "$ {level}",
+															   "companyCode ": "$ {companyCode}",
+															   "isServiceShop ": "$ {isServiceShop}",
+															   "isSignContract ": "$ {isSignContract}",
+															   "areaCode ": "$ {areaCode}",
+															   "cityCode ": "$ {cityCode}",
+															   "provinceCode ": "$ {provinceCode}",
+															   "ratifyDate ": "$ {ratifyDate}",
+															   "regionCode ": "$ {regionCode}",
+															   "ratifyEndTime ": "$ {ratifyEndTime}",
+															   "ratifyStartTime ": "$ {ratifyStartTime}",
+															   "pageNum ": "$ {pageNum}",
+															   "pageSize ": "$ {pageSize}"
+														   },
+														   "url ": "$ {base_url}/mgmt/store /listStore "
+													   },
+													   "validate ": [
+														   {"eq ": ["status_code ", 200]},
+														   {"eq ": ["content.code ", 200]}
+													   ],
+													   "variables ": {
+														   "storeCode ": null,
+														   "name ": null,
+														   "leaderCardNo ": 3000003179,
+														   "address ": "广东省 广州市 海珠区 南洲街道广州市海珠区南洲街道新滘中路88号唯品同创汇6区东三街17号自编3000003179号 ",
+														   "leaderName ": null,
+														   "shopType ": null,
+														   "shopkeeperName ": null,
+														   "shopkeeperNo ": null,
+														   "isMainShop ": null,
+														   "level ": null,
+														   "companyCode ": null,
+														   "isServiceShop": null,
+														   "isSignContract": null,
+														   "areaCode": null,
+														   "cityCode": null,
+														   "provinceCode": null,
+														   "ratifyDate": null,
+														   "regionCode": null,
+														   "ratifyEndTime": null,
+														   "ratifyStartTime": null,
+														   "pageNum ": 1,
+														   "pageSize ": 100,
+														   "access_token ": "$ {ENV(access_token)}",
+														   "token_type ": "$ {ENV(token_type)}",
+														   "base_url ": "$ {ENV(base_url)}"
+													   }
+												   }
+											   }
+										  ]
+									 }
+								},
+								{
+									"name ": "数据清理： 取消服务中心资格 ",
+									"api ": "api / 服务中心管理 / 服务中心权限 / 服务中心权限编辑修改.yml ",
+									"variables ": {
+										"storeCode ": "$ {code}",
+										"storeName ": "$ {name}",
+										"leaderName ": "$ {realname}",
+										"frozenTime ": "$ {hw_time()}",
+										"frozenReason ": "已公示清退 ",
+										"permission ": "3, 7, 6 ",
+										"shopType ": 10,
+										"access_token ": "$ {access_token}",
+										"token_type ": "$ {token_type}"
+									},
+									"api_def ": {
+										"name ": " / mgmt / store / updatePermission ",
+										"request ": {
+											"headers ": {"Authorization ": "$ {token_type}$ {access_token}"},
+											"method ": "POST ",
+											"json ": {
+												"storeCode ": "$ {storeCode}",
+												"storeName ": "$ {storeName}",
+												"leaderName ": "$ {leaderName}",
+												"frozenTime ": "$ {frozenTime}",
+												"frozenReason ": "$ {frozenReason}",
+												"cancelTime ":"${cancelTime}",
+												"permission": "${permission}",
+												"shopType": "${shopType}"
+											},
+											"url": "${base_url}/mgmt/store/updatePermission"
+										},
+										"variables": {
+											"storeCode": 902018,
+											"storeName": "佛山市南海区黄亿利商品信息服务部 ",
+											"leaderName ": "黄溢丽 ",
+											"frozenTime ": "$ {hw_time()}",
+											"frozenReason ": "已公示清退 ",
+											"cancelTime ": null,
+											"permission ": "3, 7, 6 ",
+											"shopType ": 10,
+											"access_token ": "$ {ENV(access_token)}",
+											"token_type ": "$ {ENV(token_type)}",
+											"base_url ": "$ {ENV(base_url)}"
+										},
+										"validate ": [
+											{"eq ": ["status_code ", 200]},
+											{"eq ": ["content.code ", 200]}
+										]
+									}
+								}
+						   ]
+					  }
+				 },
+				"添加服务中心： 检查经营地址是否重复 ": {
+					"name ":"添加服务中心：检查经营地址是否重复",
+					"testcase": "testcases/服务中心管理/服务中心列表查询/新建服务中心/检查经营地址是否重复.yml",
+					"testcase_def": {
+						"config": {
+							"name": "添加服务中心：经营地址唯一性检查",
+							"variables ": {
+								"content_00 ": "用例级别 ",
+								"content_01 ": "用例步骤级别1 ",
+								"content_02 ": "用例步骤级别2 "
+							},
+							"setup_hooks ": ["$ {hw_setup($content_00)}"],
+							"teardown_hooks ": ["$ {hw_teardown($content_00)}"]
+						},
+						"teststeps ": [
+							{
+								"name ": "前提条件： 登录完美运营后台 ",
+								"setup_hooks ": ["$ {hw_setup($content_01)}"],
+								"teardown_hooks ": ["$ {hw_teardown($content_01)}"],
+								"api ": "api / 架构基础服务 / 完美运营后台登陆.yml ",
+								"extract ": [
+									{"access_token ": "content.data.access_token "},
+									{"token_type ": "content.data.token_type "},
+									{"nickname ": "content.data.nickname "}
+								],
+								"api_def ": {
+									"name ": " / login ",
+									"request ": {
+										"method ": "POST ",
+										"headers ": {"Authorization ": "Basic b3BfYXBwOnBlcmZlY3RfcG9ydGFs "},
+										"data ": {
+											"key ": "$ {key}",
+											"data ": "$ {data}"
+										},
+										"url ": "$ {base_url}/login"
+									},
+									"variables": {
+										"base_url": "${ENV(base_url)}",
+										"key": "${hw_login_rsakey($username, $password, 1,$channel)}",
+										"data ": "$ {hw_login_rsakey($username, $password, 0, $channel)}",
+										"username ": "hewei1987 ",
+										"password ": "888888 ",
+										"channel ":
+										"op "
+									},
+									"validate ": [
+										{"eq ": ["status_code ", 200]},
+										{"eq ": ["content.code", 200]}
+									]
+								}
+							},
+							{
+								"name": "添加服务中心：失败路径-经营地址和942577的相同检查(广州市有街道且填写)",
+								"setup_hooks": ["${hw_setup($content_02)}"],
+								"teardown_hooks": ["${hw_teardown($content_02)}"],
+								"api ": "api / 服务中心管理 / 服务中心列表查询 / 检查经营地址是否重复.yml ",
+								"variables ": {
+									"provinceName ": "广东省 ",
+									"cityName ": "广州市 ",
+									"areaName ": "海珠区 ",
+									"streetName ": "南洲街道 ",
+									"detailAddress ": "广州市海珠区同创汇11号 ",
+									"access_token ": "$ {access_token}",
+									"token_type ": "$ {token_type}"},
+								"validate ": [
+									{"eq ": ["content.data ", "942577 "]}
+								],
+								"api_def ": {
+									"name ": " / mgmt / store / checkBusinessAddressIsExist ",
+									"request ": {
+										"headers": {"Authorization": "${token_type} ${access_token}"},
+										"method": "GET",
+										"params": {
+											"provinceName": "${provinceName}",
+											"cityName": "${cityName}",
+											"areaName": "${areaName}",
+											"streetName": "${streetName}",
+											"detailAddress ": "$ {detailAddress}"
+										},
+										"url ": "$ {base_url}/mgmt/store / checkBusinessAddressIsExist "
+									},
+									"validate ": [
+										{"eq ": ["status_code ", 200]}
+									],
+									"variables ": {
+										"provinceName ": "广东省 ",
+										"cityName ": "广州市 ",
+										"areaName ": "海珠区 ",
+										"streetName ": "南州街道 ",
+										"detailAddress ": "广州市海珠区南洲街道新滘中路88号唯品同创汇6区东三街17号自编23号 ",
+										"access_token ": "$ {ENV(access_token)}",
+										"token_type ": "$ {ENV(token_ type)}",
+										"base_url ": "$ {ENV(base_url)}"
+									}
+								}
+							},
+							{
+								"name ": "添加服务中心： 失败路径 - 经营地址和902005的相同检查(茂名市有街道但不填)",
+								"api ": "api / 服务中心管理 / 服务中心列表查询 / 检查经营地址是否重复.yml ",
+								"variables ": {
+									"provinceName": "广东省",
+									"cityName": "茂名市",
+									"areaName": "茂南区",
+									"streetName": null,
+									"detailAddress": "油城六路三巷1-01号",
+									"access_token": "${access_token}",
+									"token_type": "${token_type}"},
+								"validate ": [
+									{"eq ": ["content.data ", "902005 "]}
+								],
+								"api_def ": {
+									"name ": " / mgmt / store / checkBusinessAddressIsExist ",
+									"request ": {
+										"headers ": {"Authorization ": "$ {token_type}$ {access_token}"},
+										"method ": "GET ",
+										"params ": {
+											"provinceName": "${provinceName}",
+											"cityName": "${cityName}",
+											"areaName": "${areaName}",
+											"streetName": "${streetName}",
+											"detailAddress": "${detailAddress}"
+										},
+										"url": "${base_url}/mgmt/store/checkBusinessAddressIsExist "
+									},
+									"validate ": [
+										{"eq ": ["status_code ", 200]}
+									],
+									"variables ": {
+										"provinceName ": "广东省 ",
+										"cityName ": "广州市 ",
+										"areaName ": "海珠区 ",
+										"streetName ": "南州街道 ",
+										"detailAddress ": "广州市海珠区南洲街道新滘中路88号唯品同创汇6区东三街17号自编23号 ",
+										"access_token ": "$ {ENV(access_token)}",
+										"token_type ": "$ {ENV(token_type)}",
+										"base_url ": "$ {ENV(base_url)}"
+									}
+								}
+							},
+							{
+								"name ": "添加服务中心： 失败路径 - 经营地址和902128 的相同检查(中山市没有区)",
+								"api ": "api / 服务中心管理 / 服务中心列表查询 / 检查经营地址是否重复.yml ",
+								"variables ": {
+									"provinceName ": "广东省 ",
+									"cityName ": "中山市 ",
+									"areaName ": "石岐区街道办事处 ",
+									"streetName ": null,
+									"detailAddress": "湖滨北路45号5卡",
+									"access_token": "${access_token}",
+									"token_type": "${token_type}"},
+								"validate": [
+									{"eq": ["content.data", "902128"]}
+								],
+								"api_def": {
+									"name": "/mgmt/store/checkBusinessAddressIsExist ",
+									"request ": {
+										"headers ": {"Authorization ": "$ {token_type}$ {access_token}"},
+										"method ": "GET ",
+										"params ": {
+											"provinceName ": "$ {provinceName}",
+											"cityName ": "$ {cityName}",
+											"areaName ": "$ {areaName}",
+											"streetName ": "$ {streetName}",
+											"detailAddress ": "$ {detailAddress}"
+										},
+										"url ": "$ {base_url}/mgmt/store / checkBusinessAddressIsExist "
+									},
+									"validate ": [
+										{"eq ": ["status_code ", 200]}
+									],
+									"variables ": {
+										"provinceName ": "广东省 ",
+										"cityName ": "广州市 ",
+										"areaName ": "海珠区 ",
+										"streetName ": "南州街道 ",
+										"detailAddress ": "广州市海珠区南洲街道新滘中路88号唯品同创汇6区东三街17号自编23号 ",
+										"access_token ": "$ {ENV(access_token)}",
+										"token_type": "${ENV(token_type)}",
+										"base_url": "${ENV(base_url)}"
+									}
+								}
+							},
+							{
+								"name": "添加服务中心：失败路径-经营地址和已经取消资格的903698的相同检查(省市区，详细地址相同)",
+								"api": "api/服务中心管理/服务中心列表查询 / 检查经营地址是否重复.yml ",
+								"variables ": {
+									"provinceName ": "北京市 ",
+									"cityName ": "北京市 ",
+									"areaName ": "东城区 ",
+									"streetName ": "东华门街道办事处 ",
+									"detailAddress ": "北京市东城区东华门街道25号自编1620898700163 号 ",
+									"access_token ": "$ {access_token}",
+									"token_type ": "$ {token_type}"},
+								"validate ": [
+									{"eq ": ["content.data ", "903698 "]}
+								],
+								"api_def ": {
+									"name ": " / mgmt / store / checkBusinessAddressIsExist ",
+									"request ": {
+										"headers ": {"Authorization ": "$ {token_type}$ {access_token}"},
+										"method ": "GET ",
+										"params ": {
+											"provinceName ": "$ {provinceName}",
+											"cityName ": "$ {cityName}",
+											"areaName ": "$ {areaName}",
+											"streetName ": "$ {streetName}",
+											"detailAddress ": "$ {detailAddress}"
+										},
+										"url ": "$ {base_url}/mgmt/store / checkBusinessAddressIsExist "
+									},
+									"validate ": [
+										{"eq ": ["status_code ", 200]}
+									],
+									"variables ": {
+										"provinceName ": "广东省 ",
+										"cityName ": "广州市 ",
+										"areaName ": "海珠区 ",
+										"streetName ": "南州街道 ",
+										"detailAddress ": "广州市海珠区南洲街道新滘中路88号唯品同创汇6区东三街17号自编23号 ",
+										"access_token ": "$ {ENV(access_token)}",
+										"token_type ": "$ {ENV(token_type)}",
+										"base_url ": "$ {ENV(base_url)}"
+									}
+								}
+							},
+							{
+								"name ": "添加服务中心： 成功路径 - 经营地址和902128的相同检查(省市区不同， 只有详细地址相同)",
+								"api ": "api / 服务中心管理 / 服务中心列表查询 / 检查经营地址是否重复.yml ",
+								"variables ": {
+									"provinceName ": "广西壮族自治区 ",
+									"cityName ": "南宁市 ",
+									"areaName ": "兴宁区 ",
+									"streetName ": "民生街道办事处 ",
+									"detailAddress ": "湖滨北路45号5卡 ",
+									"access_token ": "$ {access_token}",
+									"token_type ": "$ {token_type}"},
+								"validate ": [
+									{"str_eq ": ["content.data ", "null "]}
+								],
+								"api_def ": {
+									"name ": " / mgmt / store / checkBusinessAddressIsExist ",
+									"request ": {
+										"headers ": {"Authorization ": "$ {token_type}$ {access_token}"},
+										"method": "GET",
+										"params": {
+											"provinceName": "${provinceName}",
+											"cityName": "${cityName}",
+											"areaName": "${areaName}",
+											"streetName": "${streetName}",
+											"detailAddress": "${detailAddress}"
+										},
+										"url": "${base_url}/mgmt / store / checkBusinessAddressIsExist "
+									},
+									"validate ": [
+										{"eq ": ["status_code ", 200]}
+									],
+									"variables ": {
+										"provinceName ": "广东省 ",
+										"cityName ": "广州市 ",
+										"areaName ": "海珠区 ",
+										"streetName ": "南州街道 ",
+										"detailAddress ": "广州市海珠区南洲街道新滘中路88号唯品同创汇6区东三街17号自编23号 ",
+										"access_token ": "$ {ENV(access_token)}",
+										"token_type ": "$ {ENV(token_type)}",
+										"base_url ": "$ {ENV(base_url)}"
+									}
+								}
+							},
+							{
+								"name ": "添加服务中心： 成功路径 - 经营地址和902128的相同检查(省市区相同， 只有详细地址不同)",
+								"api ": "api / 服务中心管理 / 服务中心列表查询 / 检查经营地址是否重复.yml ",
+								"variables ": {
+									"provinceName ": "广东省 ",
+									"cityName ": "中山市 ",
+									"areaName ": "石岐区街道办事处 ",
+									"streetName ": null,
+									"detailAddress ": "湖滨北路45号5卡502号房 ",
+									"access_token ": "$ {access_token}",
+									"token_type ": "$ {token_type}"
+								},
+								"validate ": [
+									{"str_eq ": ["content.data ", "null "]}
+								],
+								"api_def": {
+									"name": "/mgmt/store/checkBusinessAddressIsExist",
+									"request": {
+										"headers": {"Authorization": "${token_type} ${access_token}"},
+										"method": "GET",
+										"params": {
+											"provinceName": "${provinceName}",
+											"cityName": "${cityName}",
+											"areaName": "${areaName}",
+											"streetName": "${streetName}",
+											"detailAddress": "${detailAddress}"
+										},
+										"url": "${base_url}/mgmt/store/checkBusinessAddressIsExist"
+									},
+									"validate": [
+										{"eq": ["status_code", 200]}
+									],
+									"variables": {
+										"provinceName": "广东省",
+										"cityName": "广州市",
+										"areaName": "海珠区",
+										"streetName": "南州街道",
+										"detailAddress": "广州市海珠区南洲街道新滘中路88号唯品同创汇6区东三街17号自编23号 ",
+										"access_token ": "$ {ENV(access_token)}", "token_type ": "$ {ENV(token_type)}",
+										"base_url ": "$ {ENV(base_url)}"
+									}
+								}
+							}
+						]
+					}
+				}
+			 },
+			 "path ": "testsuites / 服务中心管理 / 添加服务中心主路径用例集.yml ",
+			 "type ": "testsuite "
+		 }
+	]
+}

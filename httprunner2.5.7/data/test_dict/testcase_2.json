@@ -1,0 +1,33 @@
+
+{
+    "name": "添加服务中心：失败路径-经营地址和902005的相同检查(茂名市有街道但不填)",
+    "api": "api/服务中心管理/服务中心列表查询/检查经营地址是否重复.yml",
+    "variables": {
+        "provinceName": "广东省",
+        "cityName": "茂名市",
+        "areaName": "茂南区",
+        "streetName": null,
+        "detailAddress": "油城六路三巷1-01号",
+        "access_token": "LazyString(${access_token})",
+        "token_type": "LazyString(${token_type})",
+        "base_url": "LazyString(${ENV(base_url)})",
+        "content_00": "用例级别",
+        "content_01": "用例步骤级别1",
+        "content_02": "用例步骤级别2"
+    },
+    "extract": {},
+    "request": {
+        "headers": {"Authorization": "LazyString(${token_type} ${access_token})"},
+        "method": "GET",
+        "params": {
+            "provinceName":" LazyString(${provinceName})",
+            "cityName": "LazyString(${cityName})",
+            "areaName": "LazyString(${areaName})",
+            "streetName": "LazyString(${streetName})",
+            "detailAddress": "LazyString(${detailAddress})"
+        },
+        "url": "LazyString(${base_url}/mgmt/store/checkBusinessAddressIsExist)",
+        "verify": true
+    },
+    "validate": ["LazyFunction(equals(status_code, 200))", "LazyFunction(equals(content.data, 902005))"]
+}
