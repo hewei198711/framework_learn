@@ -1,1 +1,0 @@
-函数run_tests(self, tests_mapping)中的parser.parse_tests(tests_mapping)返回值

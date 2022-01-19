@@ -1,1 +1,0 @@
-api._add_tests(self, testcases)函数中_add_test(test_runner, test_dict)的参数
