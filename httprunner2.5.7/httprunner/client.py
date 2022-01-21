@@ -15,8 +15,8 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
 def get_req_resp_record(resp_obj):
-    """ get request and response info from Response() object.
-        从response()对象中获取请求和响应信息
+    """ 
+    get request and response info from Response() object.
     """
     def log_print(req_resp_dict, r_type):
         msg = "\n================== {} details ==================\n".format(r_type)
@@ -191,7 +191,6 @@ class HttpSession(requests.Session):
 
         start_timestamp = time.time()
         response = self._send_request_safe_mode(method, url, **kwargs)
-        # round() 方法返回浮点数 x 的四舍五入值
         response_time_ms = round((time.time() - start_timestamp) * 1000, 2)
 
         # get the length of the content, but if the argument stream is set to True, we take

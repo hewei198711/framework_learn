@@ -1,6 +1,5 @@
 import os
 import unittest
-from pprint import pprint
 
 from sentry_sdk import capture_message
 
@@ -14,12 +13,12 @@ class HttpRunner(object):
 
             from httprunner.api import HttpRunner
             runner = HttpRunner(
-                failfast=True, 快速失败
-                save_tests=True, 保存测试
+                failfast=True, 
+                save_tests=True, 
                 log_level="INFO",
                 log_file="test.log"
             )
-            summary = runner.run(path_or_tests) 总结
+            summary = runner.run(path_or_tests) 
 
     """
 
@@ -27,10 +26,10 @@ class HttpRunner(object):
         """ initialize HttpRunner.
 
         Args:
-            failfast (bool): stop the test run on the first error or failure. 在出现第一个错误或失败时停止测试运行
-            save_tests (bool): save loaded/parsed tests to JSON file. 将加载/解析的测试保存为JSON文件
-            log_level (str): logging level. 日志级别
-            log_file (str): log file path. 日志文件路径
+            failfast (bool): stop the test run on the first error or failure. 
+            save_tests (bool): save loaded/parsed tests to JSON file. 
+            log_level (str): logging level. 
+            log_file (str): log file path. 
 
         """
         logger.setup_logger(log_level, log_file)
@@ -48,7 +47,6 @@ class HttpRunner(object):
 
     def _add_tests(self, testcases):
         """ initialize testcase with Runner() and add to test suite.
-            把测试用例加载到测试套件中
 
         Args:
             testcases (list): testcases list.
@@ -58,55 +56,28 @@ class HttpRunner(object):
         """
 
         def _add_test(test_runner, test_dict):
-            """ add test to testcase. 把步骤添加到用例，返回一个测试步骤
-            test_dict = parsed_testcases[0][teststeps][0]
-            test_dict = {
-                "name": "/mgmt/store/checkBusinessAddressIsExist",
-                "request": {
-                    "headers": {"Authorization": "LazyString(${token_type} ${access_token})"},
-                    "method": "GET",
-                    "params": {
-                        "provinceName": "LazyString(${provinceName})",
-                        "cityName": "LazyString(${cityName})",
-                        "areaName": LazyString(${areaName}),
-                        "streetName": LazyString(${streetName}),
-                        "detailAddress": LazyString(${detailAddress})},
-                        "url": LazyString(${base_url}/mgmt/store/checkBusinessAddressIsExist),
-                        "verify": True
-                        },
-                        "variables": {
-                            "provinceName": "广东省",
-                            "cityName": "广州市",
-                            "areaName": "海珠区",
-                            "streetName": "南州街道",
-                            "detailAddress": "广州市海珠区南洲街道新滘中路88号唯品同创汇6区东三街17号自编23号",
-                            "access_token": LazyString(${ENV(access_token)}),
-                            "token_type": LazyString(${ENV(token_type)}),
-                            "base_url": LazyString(${ENV(base_url)})
-                        },
-                        "validate": [LazyFunction(equals(status_code, 200))]
-            }
+            """ 
+            add test to testcase. 
             """
 
             def test(self):
                 try:
                     test_runner.run_test(test_dict)
-                    pprint(test_runner)
                 except exceptions.MyBaseFailure as ex:
                     self.fail(str(ex))
                 finally:
                     self.meta_datas = test_runner.meta_datas
 
             if "config" in test_dict:
-                # run nested testcase 嵌套testcase运行：testcase引用了testcase
+                # run nested testcase 
                 test.__doc__ = test_dict["config"].get("name")
                 variables = test_dict["config"].get("variables", {})
             else:
-                # run api test  运行api测试  testcase引用了api
+                # run api test
                 test.__doc__ = test_dict.get("name")
                 variables = test_dict.get("variables", {})
 
-            if isinstance(test.__doc__, parser.LazyString):  #懒惰的字符串：名字中有引用的变量
+            if isinstance(test.__doc__, parser.LazyString):
 
                 try:
                     parsed_variables = parser.parse_variables_mapping(variables)  # 所有的变量字典
@@ -115,18 +86,16 @@ class HttpRunner(object):
                     )
                 except exceptions.VariableNotFound:
                     test.__doc__ = str(test.__doc__)
-            # 返回函数<function HttpRunner._add_tests.<locals>._add_test.<locals>.test at 0x000002D69C38A550>
             return test
 
-        test_suite = unittest.TestSuite()  # 用例集的子类
-        for testcase in testcases:  #遍历用例中引用的每一个用例
+        test_suite = unittest.TestSuite()
+        for testcase in testcases:
             config = testcase.get("config", {})
-            # <httprunner.runner.Runner object at 0x000002629251F520>
             test_runner = runner.Runner(config)
-            TestSequense = type('TestSequense', (unittest.TestCase,), {})  #创建测试用例：unittest.TestCase子类
-            tests = testcase.get("teststeps", [])  # 测试用例
+            TestSequense = type('TestSequense', (unittest.TestCase,), {}) 
+            tests = testcase.get("teststeps", [])
 
-            for index, test_dict in enumerate(tests):  # 遍历每一个测试步骤
+            for index, test_dict in enumerate(tests):  # 遍历测试步骤
                 times = test_dict.get("times", 1)
 
                 try:
@@ -135,14 +104,12 @@ class HttpRunner(object):
                     raise exceptions.ParamsError(
                         "times should be digit, given: {}".format(times))
 
-                for times_index in range(times):  #根据times设置，运行一个测试步骤N次
+                for times_index in range(times):
                     # suppose one testcase should not have more than 9999 steps,
-                    # 假设一个测试用例不应该有超过9999个步骤
                     # and one step should not run more than 999 times.
-                    # 一个步骤不应该运行超过999次
-                    test_method_name = 'test_{:04}_{:03}'.format(index, times_index)  # 测试方法名
-                    test_method = _add_test(test_runner, test_dict)  # 测试方法
-                    setattr(TestSequense, test_method_name, test_method)  #加载测试方法到测试用例中：unittest.TestCase子类
+                    test_method_name = 'test_{:04}_{:03}'.format(index, times_index)
+                    test_method = _add_test(test_runner, test_dict)
+                    setattr(TestSequense, test_method_name, test_method)
 
             loaded_testcase = self.test_loader.loadTestsFromTestCase(TestSequense)  # 加载测试用例到用例集（小集：测试用例）
 
@@ -322,7 +289,7 @@ class HttpRunner(object):
         return self._summary
 
     def get_vars_out(self):
-        """ get variables and output 提取变量
+        """ get variables and output
         Returns:
             list: list of variables and output.
                 if tests are parameterized, list items are corresponded to parameters.
@@ -349,18 +316,16 @@ class HttpRunner(object):
 
         return [
             summary["in_out"]
-            for summary in self._summary["details"]  #details细节
+            for summary in self._summary["details"]
         ]
 
     def run_path(self, path, dot_env_path=None, mapping=None):
         """ run testcase/testsuite file or folder.
-            运行testcase/testsuite文件或文件夹
 
         Args:
             path (str): testcase/testsuite file/foler path.
             dot_env_path (str): specified .env file path.
             mapping (dict): if mapping is specified, it will override variables in config block.
-            如果指定了映射，它将覆盖配置块中的变量
 
         Returns:
             dict: result summary
@@ -380,9 +345,9 @@ class HttpRunner(object):
 
         Args:
             path_or_tests:
-                str: testcase/testsuite file/foler path（testcases/服务中心管理/服务中心列表查询/新建服务中心/校验证件号唯一性.yml）
+                str: testcase/testsuite file/foler path
                 dict: valid testcase/testsuite data
-            dot_env_path (str): specified .env file path. 指定的.env文件路径。
+            dot_env_path (str): specified .env file path.
             mapping (dict): if mapping is specified, it will override variables in config block.
              如果指定了映射，它将覆盖配置块中的变量。
 
@@ -398,4 +363,4 @@ class HttpRunner(object):
             loader.init_pwd(project_working_directory)
             return self.run_tests(path_or_tests)
         else:
-            raise exceptions.ParamsError("Invalid testcase path or testcases: {}".format(path_or_tests))  #无效的测试用例路径或测试用例
+            raise exceptions.ParamsError("Invalid testcase path or testcases: {}".format(path_or_tests)) 

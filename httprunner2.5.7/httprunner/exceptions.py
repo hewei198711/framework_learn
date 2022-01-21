@@ -2,9 +2,8 @@
 
 from httprunner.compat import JSONDecodeError, FileNotFoundError
 
-""" failure type exceptions失败类型异常
+""" failure type exceptions
     these exceptions will mark test as failure
-    这些异常将把test标记为失败
 """
 
 
@@ -32,9 +31,8 @@ class TeardownHooksFailure(MyBaseFailure):
     pass
 
 
-""" error type exceptions错误类型的异常
+""" error type exceptions
     these exceptions will mark test as error
-    这些异常将把test标记为错误
 """
 
 

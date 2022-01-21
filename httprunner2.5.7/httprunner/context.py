@@ -16,13 +16,12 @@ class SessionContext(object):
 
     def __init__(self, variables=None):
         variables_mapping = utils.ensure_mapping_format(variables or {})
-        self.session_variables_mapping = parser.parse_variables_mapping(variables_mapping)  # 会话变量映射
-        self.test_variables_mapping = {}  # 测试变量映射
-        self.init_test_variables()  # 初始化测试变量
+        self.session_variables_mapping = parser.parse_variables_mapping(variables_mapping)
+        self.test_variables_mapping = {}
+        self.init_test_variables()
 
     def init_test_variables(self, variables_mapping=None):
         """ init test variables, called when each test(api) starts.
-            init测试变量，在每个测试(api)启动时调用
             variables_mapping will be evaluated first.
             首先计算变量映射
 
@@ -43,7 +42,6 @@ class SessionContext(object):
 
         self.test_variables_mapping = {}
         # priority: extracted variable > teststep variable
-        # 优先级:提取的变量 > teststep变量
         self.test_variables_mapping.update(parsed_variables_mapping)
         self.test_variables_mapping.update(self.session_variables_mapping)
 
@@ -55,7 +53,6 @@ class SessionContext(object):
 
     def update_session_variables(self, variables_mapping):
         """ update session with extracted variables mapping.
-            用提取的变量映射更新会话
             these variables are valid in the whole running session.
             这些变量在整个运行的会话中是有效的
         """

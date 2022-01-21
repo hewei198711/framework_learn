@@ -193,7 +193,7 @@ class ResponseObject(object):
                 return body
 
             if isinstance(body, (dict, list)):
-                # content = {"xxx": 123}, content.xxx  body是字典或列表
+                # content = {"xxx": 123}, content.xxx
                 return utils.query_json(body, sub_query)
             # isdigit() 方法检测字符串是否只由数字组成
             elif sub_query.isdigit():
@@ -206,7 +206,7 @@ class ResponseObject(object):
                 logger.log_error(err_msg)
                 raise exceptions.ExtractFailure(err_msg)
 
-        # new set response attributes in teardown_hooks在拆卸钩子中设置新的响应属性
+        # new set response attributes in teardown_hooks
         elif top_query in self.__dict__:
             attributes = self.__dict__[top_query]
 
