@@ -82,12 +82,12 @@ class Runner(object):
         if testcase_setup_hooks:
             self.do_hook_actions(testcase_setup_hooks, HookTypeEnum.SETUP)
 
-    def __del__(self):
+    def __del__(self): # 对象消失或再无引用时自动调用__del__
         if self.testcase_teardown_hooks:
             self.do_hook_actions(self.testcase_teardown_hooks, HookTypeEnum.TEARDOWN)
 
     def __clear_test_data(self):
-        """ clear request and response data 清除请求和响应数据
+        """ clear request and response data
         """
         if not isinstance(self.http_client_session, HttpSession):
             return
@@ -95,7 +95,7 @@ class Runner(object):
         self.http_client_session.init_meta_data()
 
     def _handle_skip_feature(self, test_dict):
-        """ handle skip feature for test用于测试的句柄跳过功能
+        """ handle skip feature for test
             - skip: skip current test unconditionally 跳过:无条件测试步骤
             - skipIf: skip current test if condition is true 条件为真时跳过
             - skipUnless: skip current test unless condition is true 条件为假时跳过
@@ -164,7 +164,7 @@ class Runner(object):
                 self.session_context.eval_content(action)
 
     def _run_test(self, test_dict):
-        """ run single teststep. 运行每一个测试步骤
+        """ run single teststep. 
 
         Args:
             test_dict (dict): teststep info
@@ -193,6 +193,108 @@ class Runner(object):
             exceptions.ParamsError 参数错误
             exceptions.ValidationFailure 验证失败
             exceptions.ExtractFailure 提取失败
+        
+        {
+            'api': 'api/架构基础服务/完美运营后台登陆.yml',
+            'extract': {'access_token': 'content.data.access_token',
+            'token_type': 'content.data.token_type'},
+            'name': '前提条件：登录完美运营后台',
+            'request': {
+                'data': {'data': LazyString(${data}), 'key': LazyString(${key})},
+                'headers': {'Authorization': LazyString(Basic ${ENV(Authorization)})},
+                'method': 'POST',
+                'url': LazyString(${base_url}/login),
+                'verify': False
+            },
+            'validate': [LazyFunction(equals(status_code, 200)),LazyFunction(equals(content.code, 200))],
+            'variables': {
+                'base_url': LazyString(${ENV(base_url)}),
+                'channel': 'op',
+                'data': LazyString(${hw_login_rsakey($username, $password, 0, $channel)}),
+                'key': LazyString(${hw_login_rsakey($username, $password, 1, $channel)}),
+                'maxMonth': '202108',
+                'minMonth': '202108',
+                'pageNum': 1,
+                'pageSize': 10,
+                'password': LazyString(${ENV(password)}),
+                'storeCode': '920111',
+                'username': LazyString(${ENV(username)})
+            }
+        }
+        
+        {
+            'api': 'api\\mgmt\\服务中心电子合同\\查询已月结服务中心.yml',
+            'extract': {},
+            'name': LazyString(查询已月结服务中心：成功路径-搜索服务中心编号${storeCode},月份${minMonth}检查),
+            'request': {
+                'headers': {'Authorization': LazyString(${token_type} ${access_token})},
+                'method': 'GET',
+                'params': {
+                    'companyCode': LazyString(${companyCode}),
+                    'maxMonth': LazyString(${maxMonth}),
+                    'minMonth': LazyString(${minMonth}),
+                    'pageNum': LazyString(${pageNum}),
+                    'pageSize': LazyString(${pageSize}),
+                    'storeCode': LazyString(${storeCode})
+                },
+                'url': LazyString(${base_url}/mgmt/inventory/bill/settled-store),
+                'verify': False
+            },
+            'validate': [
+                LazyFunction(equals(status_code, 200)),
+                LazyFunction(equals(content.data.list.0.storeCode, LazyString(${storeCode}))),
+                LazyFunction(equals(content.data.total, 1)),
+                LazyFunction(equals(content.data.totalPage, 1))
+            ],
+            'variables': {
+                'access_token': LazyString(${ENV(access_token)}),
+                'base_url': LazyString(${ENV(base_url)}),
+                'companyCode': '',
+                'maxMonth': '202108',
+                'minMonth': '202108',
+                'pageNum': 1,
+                'pageSize': 10,
+                'storeCode': '920111',
+                'token_type': LazyString(${ENV(token_type)})
+            }
+        }
+        
+        {
+            'api': 'api\\mgmt\\服务中心电子合同\\查询已月结服务中心.yml',
+            'extract': {},
+            'name': LazyString(查询已月结服务中心：成功路径-搜索服务中心编号${storeCode},月份${minMonth}检查),
+            'request': {
+                'headers': {'Authorization': LazyString(${token_type} ${access_token})},
+                'method': 'GET',
+                'params': {
+                    'companyCode': LazyString(${companyCode}),
+                    'maxMonth': LazyString(${maxMonth}),
+                    'minMonth': LazyString(${minMonth}),
+                    'pageNum': LazyString(${pageNum}),
+                    'pageSize': LazyString(${pageSize}),
+                    'storeCode': LazyString(${storeCode})
+                },
+                'url': LazyString(${base_url}/mgmt/inventory/bill/settled-store),
+                'verify': False
+            },
+            'validate': [
+                LazyFunction(equals(status_code, 200)),
+                LazyFunction(equals(content.data.list.0.storeCode, LazyString(${storeCode}))),
+                LazyFunction(equals(content.data.total, 1)),
+                LazyFunction(equals(content.data.totalPage, 1))
+            ],
+            'variables': {
+                'access_token': LazyString(${ENV(access_token)}),
+                'base_url': LazyString(${ENV(base_url)}),
+                'companyCode': '',
+                'maxMonth': '202108',
+                'minMonth': '202108',
+                'pageNum': 1,
+                'pageSize': 10,
+                'storeCode': '920111',
+                'token_type': LazyString(${ENV(token_type)})
+            }
+        }
 
         """
         # clear meta data first to ensure independence for each test 首先清除元数据，确保每个测试的独立性
@@ -300,7 +402,91 @@ class Runner(object):
             self.validation_results = validator.validation_results
 
     def _run_testcase(self, testcase_dict):
-        """ run single testcase. 执行每一个测试用例
+        """ 
+        run single testcase.
+        testcases\服务中心管理\对账单管理\调试.yml
+        {
+            'config': {
+                'base_url': '',
+                'name': '前提条件：登录完美运营后台',
+                'output': ['access_token', 'token_type'],
+                'testcase': 'testcases\\服务中心管理\\对账单管理\\查询已月结服务中心：服务中心编号搜索功能检查.yml',
+                'variables': {
+                    'maxMonth': '202108',
+                    'minMonth': '202108',
+                    'pageNum': 1,
+                    'pageSize': 10,
+                    'storeCode': '920111'
+                    },
+                'verify': False
+            },
+            'teststeps': [
+                {
+                    'api': 'api/架构基础服务/完美运营后台登陆.yml',
+                    'extract': {
+                        'access_token': 'content.data.access_token',
+                        'token_type': 'content.data.token_type'
+                    },
+                    'name': '前提条件：登录完美运营后台',
+                    'request': {
+                        'data': {'data': LazyString(${data}),'key': LazyString(${key})},
+                        'headers': {'Authorization': LazyString(Basic ${ENV(Authorization)})},
+                        'method': 'POST',
+                        'url': LazyString(${base_url}/login),
+                        'verify': False
+                    },
+                    'validate': [LazyFunction(equals(status_code, 200)),LazyFunction(equals(content.code, 200))],
+                    'variables': {
+                        'base_url': LazyString(${ENV(base_url)}),
+                        'channel': 'op',
+                        'data': LazyString(${hw_login_rsakey($username, $password, 0, $channel)}),
+                        'key': LazyString(${hw_login_rsakey($username, $password, 1, $channel)}),
+                        'maxMonth': '202108',
+                        'minMonth': '202108',
+                        'pageNum': 1,
+                        'pageSize': 10,
+                        'password': LazyString(${ENV(password)}),
+                        'storeCode': '920111',
+                        'username': LazyString(${ENV(username)})
+                    }
+                },
+               {
+                    'api': 'api\\mgmt\\服务中心电子合同\\查询已月结服务中心.yml',
+                    'extract': {},
+                    'name': LazyString(查询已月结服务中心：成功路径-搜索服务中心编号${storeCode},月份${minMonth}检查),
+                    'request': {
+                        'headers': {'Authorization': LazyString(${token_type} ${access_token})},
+                        'method': 'GET',
+                        'params': {
+                            'companyCode': LazyString(${companyCode}),
+                            'maxMonth': LazyString(${maxMonth}),
+                            'minMonth': LazyString(${minMonth}),
+                            'pageNum': LazyString(${pageNum}),
+                            'pageSize': LazyString(${pageSize}),
+                            'storeCode': LazyString(${storeCode})
+                        },
+                        'url': LazyString(${base_url}/mgmt/inventory/bill/settled-store),
+                        'verify': False
+                    },
+                    'validate': [LazyFunction(equals(status_code, 200)),
+                                LazyFunction(equals(content.data.list.0.storeCode, LazyString(${storeCode}))),
+                                LazyFunction(equals(content.data.total, 1)),
+                                LazyFunction(equals(content.data.totalPage, 1))],
+                    'variables': {
+                        'access_token': LazyString(${ENV(access_token)}),
+                        'base_url': LazyString(${ENV(base_url)}),
+                        'companyCode': '',
+                        'maxMonth': '202108',
+                        'minMonth': '202108',
+                        'pageNum': 1,
+                        'pageSize': 10,
+                        'storeCode': '920111',
+                        'token_type': LazyString(${ENV(token_type)})
+                    }
+                }
+            ],
+            'validate': []
+        }
         """
         self.meta_datas = []
         config = testcase_dict.get("config", {})
@@ -334,7 +520,7 @@ class Runner(object):
         )
 
     def run_test(self, test_dict):
-        """ run single teststep of testcase.可分为三种类型
+        """ run single teststep of testcase.
             test_dict may be in 3 types.可分为三种类型
 
         Args:
@@ -364,7 +550,201 @@ class Runner(object):
                     "name": "exec function",
                     "function": "${func()}"
                 }
+        """
 
+        """
+         teststep: 第一       
+        {
+            'config': {
+                'base_url': '',
+                'name': '前提条件：登录完美运营后台',
+                'output': ['access_token', 'token_type'],
+                'testcase': 'testcases\\服务中心管理\\对账单管理\\查询已月结服务中心：服务中心编号搜索功能检查.yml',
+                'variables': {
+                    'maxMonth': '202108',
+                    'minMonth': '202108',
+                    'pageNum': 1,
+                    'pageSize': 10,
+                    'storeCode': '920111'
+                },
+                'verify': False
+            },
+            'teststeps': [
+                {
+                    'api': 'api/架构基础服务/完美运营后台登陆.yml',
+                    'extract': {'access_token': 'content.data.access_token','token_type': 'content.data.token_type'},
+                    'name': '前提条件：登录完美运营后台',
+                    'request': {
+                        'data': {'data': LazyString(${data}),'key': LazyString(${key})},
+                        'headers': {'Authorization': LazyString(Basic ${ENV(Authorization)})},
+                        'method': 'POST',
+                        'url': LazyString(${base_url}/login),
+                        'verify': False
+                    },
+                    'validate': [LazyFunction(equals(status_code, 200)),LazyFunction(equals(content.code, 200))],
+                    'variables': {
+                        'base_url': LazyString(${ENV(base_url)}),
+                        'channel': 'op',
+                        'data': LazyString(${hw_login_rsakey($username, $password, 0, $channel)}),
+                        'key': LazyString(${hw_login_rsakey($username, $password, 1, $channel)}),
+                        'maxMonth': '202108',
+                        'minMonth': '202108',
+                        'pageNum': 1,
+                        'pageSize': 10,
+                        'password': LazyString(${ENV(password)}),
+                        'storeCode': '920111',
+                        'username': LazyString(${ENV(username)})
+                    }
+                },
+                {
+                    'api': 'api\\mgmt\\服务中心电子合同\\查询已月结服务中心.yml',
+                    'extract': {},
+                    'name': LazyString(查询已月结服务中心：成功路径-搜索服务中心编号${storeCode},月份${minMonth}检查),
+                    'request': {
+                        'headers': {'Authorization': LazyString(${token_type} ${access_token})},
+                        'method': 'GET',
+                        'params': {
+                            'companyCode': LazyString(${companyCode}),
+                            'maxMonth': LazyString(${maxMonth}),
+                            'minMonth': LazyString(${minMonth}),
+                            'pageNum': LazyString(${pageNum}),
+                            'pageSize': LazyString(${pageSize}),
+                            'storeCode': LazyString(${storeCode})
+                        },
+                        'url': LazyString(${base_url}/mgmt/inventory/bill/settled-store),
+                        'verify': False
+                    },
+                    'validate': [
+                        LazyFunction(equals(status_code, 200)),
+                        LazyFunction(equals(content.data.list.0.storeCode, LazyString(${storeCode}))),
+                        LazyFunction(equals(content.data.total, 1)),
+                        LazyFunction(equals(content.data.totalPage, 1))
+                    ],
+                    'variables': {
+                        'access_token': LazyString(${ENV(access_token)}),
+                        'base_url': LazyString(${ENV(base_url)}),
+                        'companyCode': '',
+                        'maxMonth': '202108',
+                        'minMonth': '202108',
+                        'pageNum': 1,
+                        'pageSize': 10,
+                        'storeCode': '920111',
+                        'token_type': LazyString(${ENV(token_type)})
+                    }
+                }
+            ],
+            'validate': []
+        }
+        """
+        
+        """
+        teststep: 第一的第一步
+        {
+            'api': 'api/架构基础服务/完美运营后台登陆.yml',
+            'extract': {'access_token': 'content.data.access_token','token_type': 'content.data.token_type'},
+            'name': '前提条件：登录完美运营后台',
+            'request': {
+                'data': {'data': LazyString(${data}), 'key': LazyString(${key})},
+                'headers': {'Authorization': LazyString(Basic ${ENV(Authorization)})},
+                'method': 'POST',
+                'url': LazyString(${base_url}/login),
+                'verify': False
+            },
+            'validate': [LazyFunction(equals(status_code, 200)),LazyFunction(equals(content.code, 200))],
+            'variables': {
+                'base_url': LazyString(${ENV(base_url)}),
+                'channel': 'op',
+                'data': LazyString(${hw_login_rsakey($username, $password, 0, $channel)}),
+                'key': LazyString(${hw_login_rsakey($username, $password, 1, $channel)}),
+                'maxMonth': '202108',
+                'minMonth': '202108',
+                'pageNum': 1,
+                'pageSize': 10,
+                'password': LazyString(${ENV(password)}),
+                'storeCode': '920111',
+                'username': LazyString(${ENV(username)})
+            }
+        }
+        """
+        
+        """
+        teststep: 第一的第二步
+        {
+            'api': 'api\\mgmt\\服务中心电子合同\\查询已月结服务中心.yml',
+            'extract': {},
+            'name': LazyString(查询已月结服务中心：成功路径-搜索服务中心编号${storeCode},月份${minMonth}检查),
+            'request': {
+                'headers': {'Authorization': LazyString(${token_type} ${access_token})},
+                'method': 'GET',
+                'params': {
+                    'companyCode': LazyString(${companyCode}),
+                    'maxMonth': LazyString(${maxMonth}),
+                    'minMonth': LazyString(${minMonth}),
+                    'pageNum': LazyString(${pageNum}),
+                    'pageSize': LazyString(${pageSize}),
+                    'storeCode': LazyString(${storeCode})
+                },
+                'url': LazyString(${base_url}/mgmt/inventory/bill/settled-store),
+                'verify': False
+            },
+            'validate': [
+                LazyFunction(equals(status_code, 200)),
+                LazyFunction(equals(content.data.list.0.storeCode, LazyString(${storeCode}))),
+                LazyFunction(equals(content.data.total, 1)),
+                LazyFunction(equals(content.data.totalPage, 1))
+            ],
+            'variables': {
+                'access_token': LazyString(${ENV(access_token)}),
+                'base_url': LazyString(${ENV(base_url)}),
+                'companyCode': '',
+                'maxMonth': '202108',
+                'minMonth': '202108',
+                'pageNum': 1,
+                'pageSize': 10,
+                'storeCode': '920111',
+                'token_type': LazyString(${ENV(token_type)})
+            }
+        }
+        """
+        
+        """
+        teststep: 第二
+        {
+            'api': 'api\\mgmt\\服务中心电子合同\\查询已月结服务中心.yml',
+            'extract': {},
+            'name': LazyString(查询已月结服务中心：成功路径-搜索服务中心编号${storeCode},月份${minMonth}检查),
+            'request': {
+                'headers': {'Authorization': LazyString(${token_type} ${access_token})},
+                'method': 'GET',
+                'params': {
+                    'companyCode': LazyString(${companyCode}),
+                    'maxMonth': LazyString(${maxMonth}),
+                    'minMonth': LazyString(${minMonth}),
+                    'pageNum': LazyString(${pageNum}),
+                    'pageSize': LazyString(${pageSize}),
+                    'storeCode': LazyString(${storeCode})
+                },
+                'url': LazyString(${base_url}/mgmt/inventory/bill/settled-store),
+                'verify': False
+            },
+            'validate': [
+                LazyFunction(equals(status_code, 200)),
+                LazyFunction(equals(content.data.list.0.storeCode, LazyString(${storeCode}))),
+                LazyFunction(equals(content.data.total, 1)),
+                LazyFunction(equals(content.data.totalPage, 1))
+            ],
+            'variables': {
+                'access_token': LazyString(${ENV(access_token)}),
+                'base_url': LazyString(${ENV(base_url)}),
+                'companyCode': '',
+                'maxMonth': '202108',
+                'minMonth': '202108',
+                'pageNum': 1,
+                'pageSize': 10,
+                'storeCode': '920111',
+                'token_type': LazyString(${ENV(token_type)})
+            }
+        }
         """
         self.meta_datas = None
         if "teststeps" in test_dict:

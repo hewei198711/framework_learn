@@ -2,7 +2,7 @@ import re
 from collections import OrderedDict
 
 import jsonpath
-from idna import unicode
+# from idna import unicode
 
 from httprunner import exceptions, logger, utils
 from httprunner.compat import basestring, is_py2
@@ -254,8 +254,8 @@ class ResponseObject(object):
         else:
             value = self._extract_field_with_delimiter(field)
 
-        if is_py2 and isinstance(value, unicode):
-            value = value.encode("utf-8")
+        # if is_py2 and isinstance(value, unicode):
+        #     value = value.encode("utf-8")
 
         msg += "\t=> {}".format(value)
         logger.log_debug(msg)

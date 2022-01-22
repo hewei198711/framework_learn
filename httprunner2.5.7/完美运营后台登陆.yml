@@ -1,0 +1,25 @@
+
+name: /login  # 登陆
+request:
+    method: POST
+    headers:
+        Authorization: Basic ${ENV(Authorization)}
+    data:
+        key: ${key}
+        data: ${data}
+    url: ${base_url}/login
+variables:
+    base_url: ${ENV(base_url)}
+    key: ${hw_login_rsakey($username, $password, 1, $channel)}
+    data: ${hw_login_rsakey($username, $password, 0, $channel)}
+    username: ${ENV(username)}
+    password: ${ENV(password)}
+    channel: "op"
+validate:
+    -   eq:
+        - status_code
+        - 200
+    -   eq:
+        - content.code
+        - 200
+

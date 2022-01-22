@@ -183,13 +183,13 @@ def load_dot_env_file(dot_env_path):
         for line in fp:
             # maxsplit=1
 
+            if line.startswith("#"):
+                continue
             if "=" in line:
                 # split() 切片，如果参数 num 有指定值，则分隔 num+1 个子字符串
                 variable, value = line.split("=", 1)
             elif ":" in line:
                 variable, value = line.split(":", 1)
-            elif line.startswith("#"):
-                continue
             else:
                 raise exceptions.FileFormatError(".env format error")
             # strip() 方法用于移除字符串头尾指定的字符（默认为空格或换行符）

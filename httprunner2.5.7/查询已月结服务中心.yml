@@ -1,0 +1,28 @@
+
+name: /mgmt/inventory/bill/settled-store  # 查询已月结服务中心
+request:
+    method: GET
+    headers:
+        Authorization: ${token_type} ${access_token}
+    params:
+        companyCode: ${companyCode}
+        maxMonth: ${maxMonth}
+        minMonth: ${minMonth}
+        pageNum: ${pageNum}
+        pageSize: ${pageSize}
+        storeCode: ${storeCode}
+    url: ${base_url}/mgmt/inventory/bill/settled-store
+validate:
+    -   eq:
+        - status_code
+        - 200
+variables:
+    companyCode: ""  # str,分公司编号
+    maxMonth: "202108"  # str,,月份最大值,格式：yyyyMM
+    minMonth: "202108"  # str,,月份最小值,格式：yyyyMM
+    pageNum: 1  # int,页码
+    pageSize: 10 # int,每页页数
+    storeCode: ""  # str,服务中心编号
+    access_token: ${ENV(access_token)}
+    token_type: ${ENV(token_type)}
+    base_url: ${ENV(base_url)}

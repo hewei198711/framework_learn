@@ -11,7 +11,7 @@ import uuid
 from datetime import datetime
 
 import sentry_sdk
-from idna import unicode
+# from idna import unicode
 
 from httprunner import exceptions, logger, __version__
 from httprunner.compat import basestring, bytes, is_py2
@@ -367,11 +367,11 @@ def print_info(info_mapping):
         elif value is None:
             value = "None"
 
-        if is_py2:
-            if isinstance(key, unicode):
-                key = key.encode("utf-8")
-            if isinstance(value, unicode):
-                value = value.encode("utf-8")
+        # if is_py2:
+        #     if isinstance(key, unicode):
+        #         key = key.encode("utf-8")
+        #     if isinstance(value, unicode):
+        #         value = value.encode("utf-8")
 
         content += content_format.format(key, value)
 
@@ -602,16 +602,17 @@ def dump_json_file(json_data, json_file_abs_path):
     try:
         with io.open(json_file_abs_path, 'w', encoding='utf-8') as outfile:
             if is_py2:
-                outfile.write(
-                    unicode(json.dumps(
-                        json_data,
-                        indent=4,
-                        separators=(',', ':'),
-                        encoding="utf8",
-                        ensure_ascii=False,
-                        cls=PythonObjectEncoder
-                    ))
-                )
+                pass
+                # outfile.write(
+                #     unicode(json.dumps(
+                #         json_data,
+                #         indent=4,
+                #         separators=(',', ':'),
+                #         encoding="utf8",
+                #         ensure_ascii=False,
+                #         cls=PythonObjectEncoder
+                #     ))
+                # )
             else:
                 json.dump(
                     json_data,
