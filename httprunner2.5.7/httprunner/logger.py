@@ -36,10 +36,17 @@ def get_logger(name=None):
     if logger_key in loggers:
         return loggers[logger_key]
 
-    _logger = logging.getLogger(name)
+    _logger = logging.getLogger(name) #! 记录器
 
     log_level = LOG_LEVEL
     # getattr(object, name[, default])返回一个对象属性值
+    # 级别       数值
+    # CRITICAL    50
+    # ERROR       40
+    # WARNING     30
+    # INFO        20
+    # DEBUG       10
+    # NOTSET       0
     level = getattr(logging, log_level.upper(), None)
     if not level:
         color_print("Invalid log level: %s" % log_level, "RED")
@@ -52,7 +59,7 @@ def get_logger(name=None):
         # 默认为 1000。当将其设置为 0 或小于 0，将关闭所有回溯信息，并且只打印异常类型和异常值
         sys.tracebacklimit = 0
 
-    _logger.setLevel(level)
+    _logger.setLevel(level) #! 设置日志级别
     if LOG_FILE_PATH:
         # os.path.dirname 返回文件路径（不含文件名）
         log_dir = os.path.dirname(LOG_FILE_PATH)
@@ -63,11 +70,11 @@ def get_logger(name=None):
         # 如果 encoding 不为 None，则会将其用作打开文件的编码格式。 
         # 如果 delay 为真值，则文件打开会被推迟至第一次调用 emit() 时。 默认情况下，文件会无限增长。 
         # 如果指定了 errors，它会被用于确定编码格式错误的处理方式
-        handler = logging.FileHandler(LOG_FILE_PATH, encoding="utf-8")
+        handler = logging.FileHandler(LOG_FILE_PATH, encoding="utf-8") #! 设置日志处理器
     else:
         # class logging.StreamHandler(stream=None)
         # 如果指定了 stream，则实例将用它作为日志记录输出；在其他情况下将使用 sys.stderr。
-        handler = logging.StreamHandler(sys.stdout)
+        handler = logging.StreamHandler(sys.stdout) #! 设置日志处理器
     # ColoredFormatter(logging.Formatter)
     # - fmt (str): The format string to use
     # - datefmt (str): A format string for the date
@@ -79,8 +86,8 @@ def get_logger(name=None):
         reset=True,
         log_colors=log_colors_config
     )
-    handler.setFormatter(formatter)
-    _logger.addHandler(handler)
+    handler.setFormatter(formatter) #! 设置日志处理器格式
+    _logger.addHandler(handler) #! 把处理器添加到记录器上
 
     loggers[logger_key] = _logger
     return _logger
