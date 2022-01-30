@@ -47,15 +47,12 @@ def _load_json_file(json_file):
 
 def load_csv_file(csv_file):
     """ load csv file and check file content format
-        加载csv文件并检查文件内容格式
 
     Args:
         csv_file (str): csv file path, csv file content is like below:
-        csv文件路径，csv文件内容如下所示
 
     Returns:
         list: list of parameters, each parameter is in dict format
-            参数列表，每个参数都是dict格式
 
     Examples:
         >>> cat csv_file
@@ -72,10 +69,10 @@ def load_csv_file(csv_file):
         ]
 
     """
-    # os.path.isabs 判断是否为绝对路径
+    # os.path.isabs
     if not os.path.isabs(csv_file):
         pwd = get_project_working_directory()
-        # make compatible with Windows/Linux 与Windows/Linux兼容
+        # make compatible with Windows/Linux
         csv_file = os.path.join(pwd, *csv_file.split("/"))
 
     if not os.path.isfile(csv_file):

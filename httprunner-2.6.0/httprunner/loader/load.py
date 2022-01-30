@@ -173,7 +173,9 @@ def load_dot_env_file(dot_env_path):
     env_variables_mapping = {}
 
     with io.open(dot_env_path, 'r', encoding='utf-8') as fp:
-        for line in fp:
+        for line in fp:            
+            if line.startswith(("#", "\n")):
+                continue
             # maxsplit=1
             if "=" in line:
                 variable, value = line.split("=", 1)

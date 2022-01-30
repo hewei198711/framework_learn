@@ -7,7 +7,7 @@ runner = HttpRunner(
     failfast=True,
     save_tests=True,
     log_level="DEBUG",
-    log_file=r"logs/test.log"
+    log_file=r"httprunner2.5.7/logs/test.log"
 )
   
 
