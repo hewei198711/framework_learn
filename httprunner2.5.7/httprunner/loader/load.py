@@ -180,7 +180,7 @@ def load_dot_env_file(dot_env_path):
         for line in fp:
             # maxsplit=1
 
-            if line.startswith("#"):
+            if line.startswith(("#", "\n")):
                 continue
             if "=" in line:
                 # split() 切片，如果参数 num 有指定值，则分隔 num+1 个子字符串
@@ -197,14 +197,13 @@ def load_dot_env_file(dot_env_path):
 
 
 def load_module_functions(module):
-    """ load python module functions.加载python模块函数
+    """ load python module functions.
 
     Args:
         module: python module
 
     Returns:
         dict: functions mapping for specified python module
-            指定python模块的函数映射
 
             {
                 "func1_name": func1,
@@ -223,7 +222,6 @@ def load_module_functions(module):
 
 def load_builtin_functions():
     """ load builtin module functions
-        加载内置模块函数
     """
     return load_module_functions(builtin)
 

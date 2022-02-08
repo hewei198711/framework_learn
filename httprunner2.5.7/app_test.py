@@ -1,9 +1,22 @@
 from email import contentmanager
-from httprunner.loader.load_test import load_dot_env_file
+import importlib
+from httprunner.loader.buildup_test import _extend_with_api_ref
 from pprint import pprint as print
+from httprunner import builtin
+
+import os
 
 
-path = r"D:\github\framework_learn\httprunner2.5.7\.env"
-content = load_dot_env_file(path)
+tests_def_mapping = {
+    "api": {},
+    "testcases": {}
+}
 
-print(content, indent=4)
+raw_testinfo = {
+    'api': '完美运营后台登陆.yml',
+    'extract': [{'access_token': 'content.data.access_token'},{'token_type': 'content.data.token_type'}],
+    'name': '前提条件：登录完美运营后台'
+}
+
+
+_extend_with_api_ref(raw_testinfo)

@@ -27,6 +27,9 @@ with io.open(common_schema_path, encoding='utf-8') as f:
         absolute_base_path = "file://" + os.path.abspath(schemas_root_dir) + "/"
 
     common_schema = json.load(f)
+    # jsonschema.RefResolver(base_uri, referrer)解析JSON引用
+    # base_uri (str):引用文档的URI
+    # referrer:实际引用的文档
     resolver = jsonschema.RefResolver(absolute_base_path, common_schema)
 
 with io.open(testcase_schema_v1_path, encoding='utf-8') as f:
@@ -50,6 +53,7 @@ class JsonSchemaChecker(object):
             检查api/testcase/testsuite格式是否有效
         """
         try:
+            # 验证给定模式下的实例
             jsonschema.validate(content, scheme, resolver=resolver)
         except jsonschema.exceptions.ValidationError as ex:
             logger.log_error(str(ex))
@@ -92,7 +96,7 @@ def is_test_path(path):
     """ check if path is valid json/yaml file path or a existed directory.
 
     Args:
-        path (str/list/tuple): file path/directory or file path list.
+        path (str/list/tuple): file path/directory or file path list.::httprunner2.5.7\调试.yml
 
     Returns:
         bool: True if path is valid file path or path list, otherwise False.

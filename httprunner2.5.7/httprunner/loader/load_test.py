@@ -2,11 +2,14 @@ import csv
 import os
 import yaml
 import json
+import types
 
 from httprunner import logger, exceptions, utils
+from httprunner import builtin
 from httprunner.loader.locate import get_project_working_directory
 
 from pprint import pprint as print
+
 
 
 def _load_yaml_file(yaml_file):
@@ -120,5 +123,16 @@ def load_dot_env_file(dot_env_path):
     return env_variables_mapping
 
 
+def load_module_functions(module):
+    """load python module functions."""
+    module_functions = {}
+    for name, item in vars(module).items():
+        if isinstance(item, types.FunctionType):
+            module_functions[name] = item
+    return module_functions
 
+
+def load_builtin_functions():
+    """load builtin module function"""        
+    return load_module_functions(builtin)
 

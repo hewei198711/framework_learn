@@ -15,9 +15,7 @@ tests_def_mapping = {
 
 def load_debugtalk_functions():
     """ load project debugtalk.py module functions
-        加载debugtalk.py里面的函数
         debugtalk.py should be located in project working directory.
-        应该位于项目工作目录
 
     Returns:
         dict: debugtalk module functions mapping
@@ -34,26 +32,41 @@ def load_debugtalk_functions():
 
 def __extend_with_api_ref(raw_testinfo):
     """ extend with api reference
-
+    
+    rew_testinfo: api引用的内容
+    
+    {
+        'api': '完美运营后台登陆.yml',
+        'extract': [{'access_token': 'content.data.access_token'},{'token_type': 'content.data.token_type'}],
+        'name': '前提条件：登录完美运营后台'}
+    {
+        'api': '查询已月结服务中心.yml',
+        'name': '查询已月结服务中心：成功路径-搜索服务中心编号${storeCode},月份${minMonth}检查',
+        'validate': [{'eq': ['content.data.list.0.storeCode', '${storeCode}']},
+                    {'eq': ['content.data.total', 1]},
+                    {'eq': ['content.data.totalPage', 1]}]}
+    {
+        'api': '查询已月结服务中心.yml',
+        'name': '查询已月结服务中心：第二次-搜索服务中心编号${storeCode},月份${minMonth}检查',
+        'validate': [{'eq': ['content.data.list.0.storeCode', '${storeCode}']},
+                    {'eq': ['content.data.total', 1]},
+                    {'eq': ['content.data.totalPage', 1]}]}
+        
     Raises:
         exceptions.ApiNotFound: api not found
 
     """
     api_name = raw_testinfo["api"]
 
-    # api maybe defined in two types:api可能定义为两种类型
+    # api maybe defined in two types:
     # 1, individual file: each file is corresponding to one api definition
-    # 单个文件:每个文件对应一个api定义
     # 2, api sets file: one file contains a list of api definitions
-    # api集文件:一个文件包含api定义列表
     # os.path.isabs(path) 判断是否为绝对路径
     if not os.path.isabs(api_name):
         # make compatible with Windows/Linux与Windows/Linux兼容
-        # 获取项目目录
         pwd = get_project_working_directory()
-        # 拼接成绝对地址 split() 通过指定分隔符对字符串进行切片，如果参数 num 有指定值，则分隔 num+1 个子字符串
         api_path = os.path.join(pwd, *api_name.split("/"))
-        # 如果是文件
+
         if os.path.isfile(api_path):
             # type 1: api is defined in individual file api在单独的文件中定义
             api_name = api_path
