@@ -3,6 +3,36 @@
 from httprunner.api import HttpRunner, report
 
 
+"""
+loaded
+    project_mapping
+        env
+        PWD
+        functions
+        test_path
+    testcases
+        config
+        teststeps
+            name***
+            testcase
+            !testcase_def
+                config
+                teststeps
+                    name***
+                    api
+                    !api_def
+                        name
+                        request
+                        variables
+                        validate
+            name***
+            api
+            !api_def
+                name
+                request
+                ***
+"""
+
 runner = HttpRunner(
     failfast=True,
     save_tests=True,
