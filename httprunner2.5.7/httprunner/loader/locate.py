@@ -2,8 +2,9 @@ import os
 import sys
 
 from httprunner import exceptions, logger
+from pprint import pprint as print
 
-project_working_directory = None
+project_working_directory = r"D:\github_ligeit\framework_learn\httprunner2.5.7"
 
 
 def locate_file(start_path, file_name):
@@ -11,8 +12,8 @@ def locate_file(start_path, file_name):
         searching will be recursive upward until current working directory or system root dir.
 
     Args:
-        file_name (str): target locate file name
-        start_path (str): start locating path, maybe file path or directory path
+        file_name (str): target locate file name ::debugtalk.py
+        start_path (str): start locating path, maybe file path or directory path ::D:\\github\\framework_learn\\httprunner2.5.7\\调试.yml
 
     Returns:
         str: located file path. None if file not found.
@@ -78,7 +79,7 @@ def init_project_working_directory(test_path):
             run -> init_project_working_directory
 
     Args:
-        test_path: specified testfile path
+        test_path: specified testfile path ::httprunner2.5.7\调试.yml
 
     Returns:
         (str, str): debugtalk.py path, project_working_directory

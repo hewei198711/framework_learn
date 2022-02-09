@@ -1,0 +1,8 @@
+config:
+    name: 调试大集合
+
+testcases:
+
+-
+    name: 调试用例
+    testcase: 调试.yml

@@ -4,11 +4,11 @@
     verify: False
     variables:
         pageNum: 1 # 页数
-        pageSize: 10 # 页大小id: 0
+        pageSize: 100 # 页大小id: 0
         storeCode: "920111"  # str,服务中心编号
         maxMonth: "202108"  # str,,月份最大值,格式：yyyyMM
         minMonth: "202108"  # str,,月份最小值,格式：yyyyMM
-    output:
+    extract:
         -   access_token
         -   token_type
 

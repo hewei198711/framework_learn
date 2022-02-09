@@ -1,5 +1,6 @@
 import importlib
 import os
+from pprint import pprint as print
 
 from httprunner import exceptions, logger, utils
 from httprunner.loader.check import JsonSchemaChecker
@@ -15,9 +16,7 @@ tests_def_mapping = {
 
 def load_debugtalk_functions():
     """ load project debugtalk.py module functions
-        加载debugtalk.py里面的函数
         debugtalk.py should be located in project working directory.
-        应该位于项目工作目录
 
     Returns:
         dict: debugtalk module functions mapping
@@ -34,26 +33,41 @@ def load_debugtalk_functions():
 
 def __extend_with_api_ref(raw_testinfo):
     """ extend with api reference
-
+    
+    rew_testinfo: api引用的内容
+    
+    {
+        'api': '完美运营后台登陆.yml',
+        'extract': [{'access_token': 'content.data.access_token'},{'token_type': 'content.data.token_type'}],
+        'name': '前提条件：登录完美运营后台'}
+    {
+        'api': '查询已月结服务中心.yml',
+        'name': '查询已月结服务中心：成功路径-搜索服务中心编号${storeCode},月份${minMonth}检查',
+        'validate': [{'eq': ['content.data.list.0.storeCode', '${storeCode}']},
+                    {'eq': ['content.data.total', 1]},
+                    {'eq': ['content.data.totalPage', 1]}]}
+    {
+        'api': '查询已月结服务中心.yml',
+        'name': '查询已月结服务中心：第二次-搜索服务中心编号${storeCode},月份${minMonth}检查',
+        'validate': [{'eq': ['content.data.list.0.storeCode', '${storeCode}']},
+                    {'eq': ['content.data.total', 1]},
+                    {'eq': ['content.data.totalPage', 1]}]}
+        
     Raises:
         exceptions.ApiNotFound: api not found
 
     """
     api_name = raw_testinfo["api"]
 
-    # api maybe defined in two types:api可能定义为两种类型
+    # api maybe defined in two types:
     # 1, individual file: each file is corresponding to one api definition
-    # 单个文件:每个文件对应一个api定义
     # 2, api sets file: one file contains a list of api definitions
-    # api集文件:一个文件包含api定义列表
     # os.path.isabs(path) 判断是否为绝对路径
     if not os.path.isabs(api_name):
         # make compatible with Windows/Linux与Windows/Linux兼容
-        # 获取项目目录
         pwd = get_project_working_directory()
-        # 拼接成绝对地址 split() 通过指定分隔符对字符串进行切片，如果参数 num 有指定值，则分隔 num+1 个子字符串
         api_path = os.path.join(pwd, *api_name.split("/"))
-        # 如果是文件
+
         if os.path.isfile(api_path):
             # type 1: api is defined in individual file api在单独的文件中定义
             api_name = api_path
@@ -72,7 +86,13 @@ def __extend_with_api_ref(raw_testinfo):
 
 
 def __extend_with_testcase_ref(raw_testinfo):
-    """ extend with testcase reference使用testcase引用进行扩展
+    """ 
+    extend with testcase reference使用testcase引用进行扩展
+    {
+        'name': '前提条件：登录后台，搜索服务中心编号',
+        'output': ['access_token', 'token_type'],
+        'testcase': '查询已月结服务中心：服务中心编号搜索功能检查.yml'
+    }
     """
     testcase_path = raw_testinfo["testcase"]
 
@@ -108,28 +128,24 @@ def load_teststep(raw_testinfo):
 
     Args:
         raw_testinfo (dict): test data, maybe in 3 formats.
-            # api reference
-            {
-                "name": "add product to cart",
-                "api": "/path/to/api",
-                "variables": {},
-                "validate": [],
-                "extract": {}
-            }
-            # testcase reference
-            {
-                "name": "add product to cart",
-                "testcase": "/path/to/testcase",
-                "variables": {}
-            }
-            # define directly
-            {
-                "name": "checkout cart",
-                "request": {},
-                "variables": {},
-                "validate": [],
-                "extract": {}
-            }
+
+        {'name': '前提条件：登录后台，搜索服务中心编号',
+            'output': ['access_token', 'token_type'],
+            'testcase': '查询已月结服务中心：服务中心编号搜索功能检查.yml'}
+        {'api': '完美运营后台登陆.yml',
+            'extract': [{'access_token': 'content.data.access_token'},
+                        {'token_type': 'content.data.token_type'}],
+            'name': '前提条件：登录完美运营后台'}
+        {'api': '查询已月结服务中心.yml',
+            'name': '查询已月结服务中心：成功路径-搜索服务中心编号${storeCode},月份${minMonth}检查',
+            'validate': [{'eq': ['content.data.list.0.storeCode', '${storeCode}']},
+                        {'eq': ['content.data.total', 1]},
+                        {'eq': ['content.data.totalPage', 1]}]}
+        {'api': '查询已月结服务中心.yml',
+            'name': '查询已月结服务中心：第二次-搜索服务中心编号${storeCode},月份${minMonth}检查',
+            'validate': [{'eq': ['content.data.list.0.storeCode', '${storeCode}']},
+                        {'eq': ['content.data.total', 1]},
+                        {'eq': ['content.data.totalPage', 1]}]}
 
     Returns:
         dict: loaded teststep content
@@ -155,26 +171,78 @@ def load_teststep(raw_testinfo):
 
 
 def load_testcase(raw_testcase):
-    """ load testcase with api/testcase references.
+    """ 
+    load testcase with api/testcase references.
 
     Args:
-        raw_testcase (list): raw testcase content loaded from JSON/YAML file:
+        raw_testcase (list): 
+        raw testcase content loaded from JSON/YAML file: 
+        既有原始用例文件，且也把testcase引用文件解析出来         
             [
-                # config part
                 {
-                    "config": {
-                        "name": "XXXX",
-                        "base_url": "https://debugtalk.com"
+                    'config': {
+                        'name': '查询已月结服务中心：服务中心编号搜索功能检查',
+                        'variables': {'maxMonth': '202108',
+                                    'minMonth': '202108',
+                                    'pageNum': 1,
+                                    'pageSize': 10,
+                                    'storeCode': '920111'},
+                        'verify': False
                     }
                 },
-                # teststeps part
                 {
-                    "test": {...}
+                    'test': {
+                        'name': '前提条件：登录后台，搜索服务中心编号',
+                        'output': ['access_token', 'token_type'],
+                        'testcase': '查询已月结服务中心：服务中心编号搜索功能检查.yml'
+                    }
                 },
                 {
-                    "test": {...}
+                    'test': {
+                        'api': '查询已月结服务中心.yml',
+                        'name': '查询已月结服务中心：第二次-搜索服务中心编号${storeCode},月份${minMonth}检查',
+                        'validate': [
+                            {'eq': ['content.data.list.0.storeCode','${storeCode}']},
+                            {'eq': ['content.data.total', 1]},
+                            {'eq': ['content.data.totalPage', 1]}
+                        ]
+                    }
                 }
             ]
+            [
+                {
+                    'config': {'name': '查询已月结服务中心：服务中心编号搜索功能检查',
+                    'extract': ['access_token', 'token_type'],
+                    'variables': {'maxMonth': '202108',
+                                'minMonth': '202108',
+                                'pageNum': 1,
+                                'pageSize': 100,
+                                'storeCode': '920111'},
+                    'verify': False}
+                },
+                {
+                    'test': {
+                        'api': '完美运营后台登陆.yml',
+                        'extract': [
+                            {'access_token': 'content.data.access_token'},
+                            {'token_type': 'content.data.token_type'}
+                        ],
+                        'name': '前提条件：登录完美运营后台'
+                    }
+                },
+                {
+                    'test': {
+                        'api': '查询已月结服务中心.yml',
+                        'name': '查询已月结服务中心：成功路径-搜索服务中心编号${storeCode},月份${minMonth}检查',
+                        'validate': [
+                            {'eq': ['content.data.list.0.storeCode','${storeCode}']},
+                            {'eq': ['content.data.total', 1]},
+                            {'eq': ['content.data.totalPage', 1]}
+                        ]
+                    }
+                }
+            ]
+        
 
     Returns:
         dict: loaded testcase content
@@ -283,6 +351,12 @@ def load_testsuite(raw_testsuite):
                     {}
                 ]
             }
+            {
+                'config': {'name': '调试大集合'},
+                'testcases': [
+                    {'name': '调试用例', 'testcase': '调试.yml'}
+                ]
+            }
 
     Returns:
         dict: loaded testsuite content
@@ -292,6 +366,7 @@ def load_testsuite(raw_testsuite):
             }
 
     """
+
     raw_testcases = raw_testsuite["testcases"]
 
     if isinstance(raw_testcases, dict):
@@ -323,7 +398,7 @@ def load_test_file(path):
     """ load test file, file maybe testcase/testsuite/api
 
     Args:
-        path (str): test file path
+        path (str): test file path:: 'httprunner2.5.7\\调试集合.yml'
 
     Returns:
         dict: loaded test content
@@ -353,6 +428,7 @@ def load_test_file(path):
             }
 
     """
+
     raw_content = load_file(path)
 
     if isinstance(raw_content, dict):
