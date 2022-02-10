@@ -150,6 +150,23 @@ def load_test_file(path):
     return loaded_content
 
 
+def load_project_data(test_path, dot_env_path=None):
+    debugtalk_path, project_working_directory = init_project_working_directory(test_path)
 
+    project_mapping = {}
+
+    dot_env_path = dot_env_path or os.path.join(project_working_directory, ".env")
+    project_mapping["env"] = load_dot_env_file(dot_env_path)
+
+    if debugtalk_path:
+        debugtalk_functions = load_debugtalk_functions()
+    else:
+        debugtalk_functions = {}
+    
+    project_mapping["PWD"] = project_working_directory
+    project_mapping["functions"] = debugtalk_functions
+    project_mapping["test_path"] = os.path.abspath(test_path)
+
+    return project_mapping
 
 

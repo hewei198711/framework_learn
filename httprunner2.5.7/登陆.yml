@@ -1,5 +1,5 @@
 
-name: /login  # 登陆
+name: /login
 request:
     method: POST
     headers:

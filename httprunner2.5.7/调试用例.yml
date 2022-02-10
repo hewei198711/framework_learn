@@ -1,0 +1,31 @@
+
+- config:
+    name: 调试用例
+    verify: False
+    variables:
+        pageNum: 1
+        pageSize: 10
+        storeCode: "920111"
+        maxMonth: "202108"
+        minMonth: "202108"
+
+- test:
+    name: 查询检查用例
+    testcase: 查询检查用例.yml
+    output:
+        -   access_token
+        -   token_type
+
+- test:
+    name: 查询
+    api: 查询.yml
+    validate:
+        - eq:
+              - content.data.list.0.storeCode
+              - ${storeCode} 
+        - eq:
+              - content.data.total
+              - 1
+        - eq:
+              - content.data.totalPage
+              - 1

@@ -9,5 +9,3 @@ path = r"httprunner2.5.7\\调试集合.yml"
 
 
 loaded_content = load_test_file(path)
-
-pprint(loaded_content)

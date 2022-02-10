@@ -475,7 +475,7 @@ def load_project_data(test_path, dot_env_path=None):
         api/testcases folder is relative to project_working_directory
 
     Args:
-        test_path (str): test file/folder path, locate pwd from this path.
+        test_path (str): test file/folder path, locate pwd from this path.:: 'httprunner2.5.7\\调试集合.yml'
         dot_env_path (str): specified .env file path
 
     Returns:
@@ -483,6 +483,7 @@ def load_project_data(test_path, dot_env_path=None):
             environments and debugtalk.py functions.
 
     """
+
     debugtalk_path, project_working_directory = init_project_working_directory(test_path)
 
     project_mapping = {}
