@@ -1,11 +1,11 @@
 from email import contentmanager
 import importlib
-from httprunner.loader.buildup_test import load_test_file
+from httprunner.loader.buildup_test import load_project_data
 from pprint import pprint
 from httprunner import builtin
 
 
-path = r"httprunner2.5.7\\调试集合.yml"
+test_path = r"httprunner2.5.7\\调试集合.yml"
 
 
-loaded_content = load_test_file(path)
+project_mapping = load_project_data(test_path, dot_env_path=None)

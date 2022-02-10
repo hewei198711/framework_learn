@@ -163,7 +163,7 @@ def load_project_data(test_path, dot_env_path=None):
     else:
         debugtalk_functions = {}
     
-    project_mapping["PWD"] = project_working_directory
+    project_mapping["PWD"] = project_working_directory 
     project_mapping["functions"] = debugtalk_functions
     project_mapping["test_path"] = os.path.abspath(test_path)
 
