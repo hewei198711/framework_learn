@@ -4,7 +4,7 @@ import sys
 from httprunner import exceptions, logger
 from pprint import pprint as print
 
-project_working_directory = r"D:\github_ligeit\framework_learn\httprunner2.5.7"
+project_working_directory = None
 
 
 def locate_file(start_path, file_name):
