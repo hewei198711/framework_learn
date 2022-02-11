@@ -1,11 +1,29 @@
 from email import contentmanager
 import importlib
-from httprunner.loader.buildup_test import load_project_data
-from pprint import pprint
+from httprunner.runner import Runner, HookTypeEnum
+from pprint import pprint as print
 from httprunner import builtin
 
 
-test_path = r"httprunner2.5.7\\调试集合.yml"
+config = {
+    'name': '调试用例', 
+    'verify': False, 
+    'setup_hooks': ['${hw_setup("test setup")}'], 
+    'teardown_hooks': ['${hw_teardown("test teardown")}'], 
+    'base_url': None, 
+    'variables': {
+        'pageNum': 1, 
+        'pageSize': 10,
+        'storeCode': '920111', 
+        'maxMonth': '202108', 
+        'minMonth': '202108'
+    }
+}
+
+runner = Runner(config)
 
 
-project_mapping = load_project_data(test_path, dot_env_path=None)
+actions = ['${hw_setup("test setup")}']
+hook_type = HookTypeEnum.SETUP
+
+runner.do_hook_actions(actions, hook_type)

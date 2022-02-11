@@ -8,6 +8,11 @@
         storeCode: "920111"
         maxMonth: "202108"
         minMonth: "202108"
+    setup_hooks:
+        - ${hw_setup("test setup")}
+    teardown_hooks:
+        - ${hw_teardown("test teardown")}
+    
 
 - test:
     name: 查询检查用例

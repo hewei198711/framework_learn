@@ -73,10 +73,10 @@ def hw_login_rsakey(username, password, index=0, channel=""):
 
 
 def hw_setup(content):
-    print("setup_hooks:{}".format(content))
+    print(f"setup_hooks:{content}")
 
 
 def hw_teardown(content):
-    print("teardown_hooks:{}".format(content))
+    print(f"teardown_hooks:{content}")
 
 

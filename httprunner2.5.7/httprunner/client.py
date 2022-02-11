@@ -17,6 +17,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 def get_req_resp_record(resp_obj):
     """ 
     get request and response info from Response() object.
+    resp_obj::<Response [200]>
     """
     def log_print(req_resp_dict, r_type):
         msg = "\n================== {} details ==================\n".format(r_type)

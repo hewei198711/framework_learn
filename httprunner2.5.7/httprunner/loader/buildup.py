@@ -508,7 +508,7 @@ def load_project_data(test_path, dot_env_path=None):
 
     return project_mapping
 
-
+#! 加载总调度函数
 def load_cases(path, dot_env_path=None):
     """ load testcases from file path, extend and merge with api/testcase definitions.
 

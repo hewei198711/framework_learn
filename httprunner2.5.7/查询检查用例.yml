@@ -8,6 +8,7 @@
         storeCode: "920111"
         maxMonth: "202108"
         minMonth: "202108"
+        storeCodeList: ["920111"]
     extract:
         -   access_token
         -   token_type
@@ -24,8 +25,8 @@
     api: 查询.yml
     validate:
         - eq:
-              - content.data.list.0.storeCode
-              - ${storeCode}
+              - $$.data.list.*.storeCode
+              - ${storeCodeList}
         - eq:
               - content.data.total
               - 1
