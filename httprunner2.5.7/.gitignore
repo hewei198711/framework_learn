@@ -18,6 +18,8 @@ reports
 *.xml
 htmlcov/
 venv/
-.env
+*.env
 debugtalk.py
 *.yml
+reports/*
+logs/*
