@@ -23,3 +23,6 @@ debugtalk.py
 *.yml
 reports/*
 logs/*
+common/*
+data/*
+locustfiles/*
